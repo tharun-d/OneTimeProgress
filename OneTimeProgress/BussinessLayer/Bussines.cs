@@ -14,5 +14,17 @@ namespace OneTimeProgress.BussinessLayer
         {
             return dataAccess.LoginValidator(loginModel);
         }
+        public List<FlightDetails> GetAllFlightDetails()
+        {
+            return dataAccess.GetAllFlightDetails();
+        }
+        public List<TaskLists> GetTasksForParticularFlight(string flightNumber)
+        {
+            return dataAccess.GetTasksForParticularFlight(flightNumber);
+        }
+        public FlightDetails GetDetailsForOneFlight(string flightNumber)
+        {
+            return dataAccess.GetDetailsForOneFlight(flightNumber);
+        }
     }
 }

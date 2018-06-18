@@ -8,23 +8,29 @@
         <thead>
             <tr>
                 <th>Flight Number</th>
-                <th>Model</th>
+                <th>Flight Model</th>
+                <th>Current Station</th>
                 <th>Bay</th>
                 <th>Tasks Start Time</th>
                 <th>Flight Departure</th>
-                <th>Deatails</th>
+                <th>Details</th>
             </tr>
         </thead>
         <tbody>
+
+            @foreach (var item in ViewBag.FlightDetails)
+            {
             <tr>
-                <td>100</td>
-                <td>AirBus 380</td>
-                <td>B-2</td>
-                <td>10:00 AM</td>
-                <td>11:00 AM</td>
-                <td><button type="submit" name="flightNumber" class="btn btn-primary" value="Hello">Task Lists</button></td>
+                <td>@item.FlightNumber</td>
+                <td>@item.FlightModel</td>
+                <td>@item.CurrentStation</td>
+                <td>@item.Bay</td>
+                <td>@item.TaskStartTime AM</td>
+                <td>@item.Departure AM</td>
+                <td><button type="submit" name="flightNumber" class="btn btn-primary" value=@item.FlightNumber>Task Lists</button></td>
             </tr>
-        </tbody>
+                    }     
+            </tbody>
     </table>
 </form>
 

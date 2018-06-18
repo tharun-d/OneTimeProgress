@@ -35,20 +35,27 @@ namespace OneTimeProgress.Controllers
 
         public ActionResult FlightsPage()
         {
+            List<FlightDetails> flightDetails = bussines.GetAllFlightDetails();
+            ViewBag.FlightDetails = flightDetails;
             return View();
         }
         [HttpPost]
         public ActionResult FlightsPage(string flightNumber)
         {
-            string flightNuamber = flightNumber;
+            Session["flightNumber"] = flightNumber;
             return RedirectToAction("TaskDetails");
         }
         public ActionResult TaskDetails()
         {
+            string flightNumber = Session["flightNumber"].ToString();
+            FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
+            ViewBag.FlightDetails = flightDetails;
+            List<TaskLists> taskLists = bussines.GetTasksForParticularFlight(flightNumber);
+            ViewBag.TaskLists = taskLists;
             return View();
         }
         [HttpPost]
-        public ActionResult TaskDetails(string data)
+        public ActionResult TaskDetails(string task)
         {
             return View();
         }

@@ -4,6 +4,34 @@
 }
 
 <form method="post">
-
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Task Detail</th>
+                <th>Required Time to complete</th>
+                <th>Start</th>
+                <th>Complete</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+                @foreach (var item in ViewBag.TaskLists)
+                {
+                    <tr>
+                        <td>@item.Task</td>
+                        <td>@item.Duration</td>
+                        <td>
+                            <span>ideally begin at @item.StartTime</span>
+                        <button type="submit" name="task" class="btn btn-success" value=@item.Task>Start</button>
+                        </td>
+                        <td>
+                            <span>ideally complete at @item.EndTime</span>
+                            <button type="submit" name="task" class="btn btn-success" value=@item.Task>Complete</button>
+                        </td>
+                    </tr>
+                }
+            
+        </tbody>
+    </table>
 </form>
 
