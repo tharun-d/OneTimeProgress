@@ -4,14 +4,27 @@
 }
 
 <form method="post">
+
     <table class="table table-bordered table-hover">
         <thead>
+            <tr>
+                <th>
+                    Flight Number: @ViewBag.FlightNumber <br />
+                    Current Station: @ViewBag.CurrentStation
+                </th>
+                <th>
+                    Reporting Bay: @ViewBag.Bay <br />
+                    Current Time: @ViewBag.Time
+                </th>
+            </tr>
+  
             <tr>
                 <th>Task Detail</th>
                 <th>Required Time to complete</th>
                 <th>Start</th>
                 <th>Complete</th>
             </tr>
+           
         </thead>
         <tbody>
             
@@ -19,14 +32,14 @@
                 {
                     <tr>
                         <td>@item.Task</td>
-                        <td>@item.Duration</td>
+                        <td>@item.Duration Minutes</td>
                         <td>
-                            <span>ideally begin at @item.StartTime</span>
-                        <button type="submit" name="task" class="btn btn-success" value=@item.Task>Start</button>
+                            <span>Ideally begins at @item.StartTime</span><br />
+                        <button type="submit" name="task" class="btn btn-primary" value=@item.Task>Start</button>
                         </td>
                         <td>
-                            <span>ideally complete at @item.EndTime</span>
-                            <button type="submit" name="task" class="btn btn-success" value=@item.Task>Complete</button>
+                            <span>Ideally completes at @item.EndTime</span><br />
+                            <button type="submit" name="task" class="btn btn-danger" value=@item.Task>Complete</button>
                         </td>
                     </tr>
                 }
