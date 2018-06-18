@@ -79,3 +79,5 @@ select flightNumber,airCraftModel,currentStation,bayNumber,taskStartTime,departu
 where flightNumber=@flightNumber
 end
 -----
+
+select * from tasklist
