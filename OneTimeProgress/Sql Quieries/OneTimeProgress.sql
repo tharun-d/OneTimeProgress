@@ -71,7 +71,7 @@ as
 begin
 select taskDetail,duration,startTime from TaskList
 where flightNumber=@flightNumber
-order by startTime
+order by startTime desc
 end
 ----------------
 create procedure GetDetailsForOneFlight(@flightNumber varchar(max))
