@@ -74,13 +74,27 @@ namespace OneTimeProgress.DataAccessLayer
                 {
                     Task = Convert.ToString(dr[0]),
                     Duration = Convert.ToInt32(dr[1]),
-                    StartTime = Convert.ToInt32(dr[2]),
-                    EndTime = Convert.ToInt32(dr[2]) + Convert.ToInt32(dr[1])
+                    StartTime = GetIdealStartTimeForTask(Convert.ToInt32(dr[2])).ToShortTimeString(),
+                    EndTime = GetIdealEndTimeForTask(Convert.ToInt32(dr[2]), Convert.ToInt32(dr[1])).ToShortTimeString()
                 };
                 taskLists.Add(details);
             }
             con.Close();
             return taskLists;
+        }
+        public DateTime GetIdealStartTimeForTask(int minutes)
+        {
+            DateTime startTime;
+            DateTime flightdeparture = (DateTime.Now.AddHours(2));
+            startTime = (flightdeparture.AddMinutes(-minutes));
+            return startTime;
+        }
+        public DateTime GetIdealEndTimeForTask(int startMinutes,int Endminutes)
+        {
+            DateTime endTime;
+            DateTime startTime = GetIdealStartTimeForTask(startMinutes);
+            endTime = (startTime.AddMinutes(Endminutes));
+            return endTime;
         }
         public FlightDetails GetDetailsForOneFlight(string flightNumber)
         {

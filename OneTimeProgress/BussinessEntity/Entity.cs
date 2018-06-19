@@ -23,7 +23,7 @@ namespace OneTimeProgress.BussinessEntity
     {
         public string Task { get; set; }
         public int Duration { get; set; }
-        public int StartTime { get; set; }
-        public int EndTime { get; set; } //starttime + duration
+        public string StartTime { get; set; }
+        public string EndTime { get; set; } //starttime + duration
     }
 }

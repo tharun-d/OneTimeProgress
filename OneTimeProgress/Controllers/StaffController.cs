@@ -55,7 +55,6 @@ namespace OneTimeProgress.Controllers
             ViewBag.FlightNumber = flightDetails.FlightNumber;
             ViewBag.Bay = flightDetails.Bay;
             ViewBag.CurrentStation = flightDetails.CurrentStation;
-            ViewBag.Time = DateTime.Now.Hour +":"+ DateTime.Now.Minute;
             List<TaskLists> taskLists = bussines.GetTasksForParticularFlight(flightNumber);
             ViewBag.TaskLists = taskLists;
             return View();

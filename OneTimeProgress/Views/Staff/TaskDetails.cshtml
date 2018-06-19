@@ -2,7 +2,26 @@
 @{
     ViewBag.Title = "TaskDetails";
 }
+<script>
+    history.pushState(null, document.title, location.href);
+    window.addEventListener('popstate', function (event) {
+        history.pushState(null, document.title, location.href);
+    });
+    window.setInterval(function () {
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var s = today.getSeconds();
+        m = checkTime(m);
+        s = checkTime(s);
+        document.getElementById('timer').innerHTML = h + ":" + m + ":" + s;
 
+    }, 1000);
+    function checkTime(i) {
+        if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
+        return i;
+    }
+</script>
 <form method="post">
 
     <table class="table table-bordered table-hover">
@@ -14,20 +33,20 @@
                 </th>
                 <th>
                     Reporting Bay: @ViewBag.Bay <br />
-                    Current Time: @ViewBag.Time
+                    <div>Current Time: <span id="timer"></span> </div>
                 </th>
             </tr>
-  
+
             <tr>
                 <th>Task Detail</th>
                 <th>Required Time to complete</th>
                 <th>Start</th>
                 <th>Complete</th>
             </tr>
-           
+
         </thead>
         <tbody>
-            
+
                 @foreach (var item in ViewBag.TaskLists)
                 {
                     <tr>
@@ -43,7 +62,7 @@
                         </td>
                     </tr>
                 }
-            
+
         </tbody>
     </table>
 </form>

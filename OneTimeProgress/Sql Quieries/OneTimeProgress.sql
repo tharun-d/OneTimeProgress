@@ -40,14 +40,15 @@ insert into AllFlightDetails values('Flight4',1004,'Airbus A320-100/200','MAA',8
 create procedure GetAllFlightsDetails as
 begin
 select flightNumber,airCraftModel,currentStation,bayNumber,taskStartTime,departure from AllFlightDetails
+ORDER BY taskStartTime
 end
 --------------------------------
 create table TaskList
 (
 flightNumber varchar(max),
 taskDetail varchar(max),
-duration varchar(max),
-startTime varchar(max)
+duration int,
+startTime int
 )
 ----------------------------------
 drop table TaskList
@@ -65,11 +66,12 @@ end
 ------------------------------
 drop procedure InsertIntoTaskList
 ---------
-create procedure GetTasksForParticularFlight(@flightNumber varchar(max))
+alter procedure GetTasksForParticularFlight(@flightNumber varchar(max))
 as
 begin
 select taskDetail,duration,startTime from TaskList
 where flightNumber=@flightNumber
+order by startTime
 end
 ----------------
 create procedure GetDetailsForOneFlight(@flightNumber varchar(max))
@@ -79,5 +81,5 @@ select flightNumber,airCraftModel,currentStation,bayNumber,taskStartTime,departu
 where flightNumber=@flightNumber
 end
 -----
-
-select * from tasklist
+select * from tasklist where flightNumber='1001'
+GetTasksForParticularFlight '1001'

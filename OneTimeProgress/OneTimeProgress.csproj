@@ -154,6 +154,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="BussinessEntity\Entity.cs" />
     <Compile Include="BussinessLayer\Bussines.cs" />
+    <Compile Include="Common\CommonThings.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="DataAccessLayer\DataAccess.cs" />
@@ -207,7 +208,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Common\" />
     <Folder Include="Models\" />
     <Folder Include="Sql Quieries\" />
   </ItemGroup>
