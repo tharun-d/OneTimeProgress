@@ -3,10 +3,6 @@
     ViewBag.Title = "TaskDetails";
 }
 <script>
-    history.pushState(null, document.title, location.href);
-    window.addEventListener('popstate', function (event) {
-        history.pushState(null, document.title, location.href);
-    });
     window.setInterval(function () {
         var today = new Date();
         var h = today.getHours();
@@ -49,18 +45,50 @@
 
                 @foreach (var item in ViewBag.TaskLists)
                 {
-                    <tr>
-                        <td>@item.Task</td>
-                        <td>@item.Duration Minutes</td>
-                        <td>
-                            <span>Ideally begins at @item.StartTime</span><br />
-                        <button type="submit" name="task" class="btn btn-primary" value=@item.Task>Start</button>
-                        </td>
-                        <td>
-                            <span>Ideally completes at @item.EndTime</span><br />
-                            <button type="submit" name="task" class="btn btn-danger" value=@item.Task>Complete</button>
-                        </td>
-                    </tr>
+            <tr>
+                <td>@item.Task</td>
+                <td>@item.Duration Minutes</td>
+                @if (item.Status == "Yet To Start")
+                {
+                    <td>
+                        <span>Starts:@item.StartTime</span><br />
+                        <button type="submit" name="Start" class="btn btn-primary" value=@item.Id>Start</button>
+                    </td>
+                }
+                @if (item.Status == "In Progress")
+                {
+                    <td>
+                        In Progress
+                    </td>
+                }
+                @if (item.Status == "Completed")
+                {
+                    <td>
+                        <span>Starts:@item.StartTime</span><br />
+                        <button type="submit" disabled name="Start" class="btn btn-primary" value=@item.Id>Start</button>
+                    </td>
+                }
+                @if (item.Status == "Yet To Start")
+                {
+                    <td>
+                        <span>Completes:@item.EndTime</span><br />
+                        <button type="submit" disabled name="Complete" class="btn btn-danger" value=@item.Id>Complete</button>
+                    </td>
+                }
+                @if (item.Status == "In Progress")
+                {
+                    <td>
+                        <span>Completes:@item.EndTime</span><br />
+                        <button type="submit" name="Complete" class="btn btn-danger" value=@item.Id>Complete</button>
+                    </td>
+                }
+                @if (item.Status == "Completed")
+                {
+                    <td>
+                        Completed
+                    </td>
+                }
+            </tr>
                 }
 
         </tbody>

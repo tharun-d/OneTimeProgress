@@ -157,6 +157,7 @@
     <Compile Include="Common\CommonThings.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
+    <Compile Include="Controllers\SuperVisorController.cs" />
     <Compile Include="DataAccessLayer\DataAccess.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -188,6 +189,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Sql Quieries\OneTimeProgress.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -205,11 +207,13 @@
     <Content Include="Views\Staff\Login.cshtml" />
     <Content Include="Views\Staff\FlightsPage.cshtml" />
     <Content Include="Views\Staff\TaskDetails.cshtml" />
+    <Content Include="Views\SuperVisor\Login.cshtml" />
+    <Content Include="Views\SuperVisor\FlightsPage.cshtml" />
+    <Content Include="Views\SuperVisor\ALLTaskDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Sql Quieries\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -28,10 +28,17 @@ namespace OneTimeProgress.Controllers
         [HttpPost]
         public ActionResult Login(LoginModel loginModel)
         {
-            if (bussines.LoginValidator(loginModel))
+            if (bussines.LoginValidator(loginModel)=="Staff")
             {
+                Session["StaffName"] = loginModel.userName;
                 return RedirectToAction("FlightsPage");
             }
+            if (bussines.LoginValidator(loginModel) == "Super Visor")
+            {
+                Session["SuperVisorName"] = loginModel.userName;
+                return RedirectToAction("FlightsPage","SuperVisor");
+            }
+
             ViewBag.Message = "Sorry we dont find you";
             return View();
         }
@@ -60,9 +67,19 @@ namespace OneTimeProgress.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult TaskDetails(string task)
+        public ActionResult TaskDetails(string Start,string Complete)
         {
-            return View();
+            string flightNumber = Session["flightNumber"].ToString();
+            if (string.IsNullOrEmpty(Start))
+            {
+                bussines.UpdateTaskStatus(flightNumber, Complete,"Completed");
+                return RedirectToAction("TaskDetails");
+            }
+            else
+            {
+                bussines.UpdateTaskStatus(flightNumber, Start, "In Progress");
+                return RedirectToAction("TaskDetails");
+            }
         }
         public string InsertTasks()
         {
@@ -77,12 +94,12 @@ namespace OneTimeProgress.Controllers
                 con.Open();
                 while (reader.Read())
                 {
-                    SqlCommand cmd = new SqlCommand("InsertIntoTaskList @flightNumber,@taskDetail,@duration,@startTime", con);
+                    SqlCommand cmd = new SqlCommand("InsertIntoTaskList @flightNumber,@taskDetail,@duration,@startTime,@statusOfTask", con);
                     cmd.Parameters.AddWithValue("@flightNumber", reader.GetDouble(0));
                     cmd.Parameters.AddWithValue("@taskDetail", reader.GetString(1));
                     cmd.Parameters.AddWithValue("@startTime", reader.GetDouble(2));
                     cmd.Parameters.AddWithValue("@duration", reader.GetDouble(3));
-                    
+                    cmd.Parameters.AddWithValue("@statusOfTask", "Yet To Start");
                     j = cmd.ExecuteNonQuery();
                 }
                 con.Close();

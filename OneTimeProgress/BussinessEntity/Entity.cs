@@ -21,9 +21,17 @@ namespace OneTimeProgress.BussinessEntity
     }
     public class TaskLists
     {
+        public int Id { get; set; }
         public string Task { get; set; }
         public int Duration { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; } //starttime + duration
+        public string Status { get; set; }
+    }
+    public class ALLTaskLists
+    {
+        public string Task { get; set; }
+        public string StaffName { get; set; }
+        public string Status { get; set; }
     }
 }

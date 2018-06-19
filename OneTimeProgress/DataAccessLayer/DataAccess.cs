@@ -12,8 +12,9 @@ namespace OneTimeProgress.DataAccessLayer
     public class DataAccess
     {
         string connection = ConfigurationManager.ConnectionStrings["Dev"].ConnectionString;
-        public bool LoginValidator(LoginModel loginModel)
+        public string LoginValidator(LoginModel loginModel)
         {
+            string result;
             SqlCommand sda;
             SqlConnection con = new SqlConnection(connection);
 
@@ -25,13 +26,14 @@ namespace OneTimeProgress.DataAccessLayer
             sda.Parameters.Add(p2);
 
             SqlDataReader dr = sda.ExecuteReader();
-            if(dr.HasRows)
-            {
+            if(dr.Read())
+            { 
+                result=Convert.ToString(dr[0]);
                 con.Close();
-                return true;
             }
-            
-            return false;
+            else
+                result = "Not Found";
+            return result;
         }
         public List<FlightDetails> GetAllFlightDetails()
         {
@@ -72,10 +74,12 @@ namespace OneTimeProgress.DataAccessLayer
             {
                 TaskLists details = new TaskLists()
                 {
-                    Task = Convert.ToString(dr[0]),
-                    Duration = Convert.ToInt32(dr[1]),
-                    StartTime = GetIdealStartTimeForTask(Convert.ToInt32(dr[2])).ToShortTimeString(),
-                    EndTime = GetIdealEndTimeForTask(Convert.ToInt32(dr[2]), Convert.ToInt32(dr[1])).ToShortTimeString()
+                    Id= Convert.ToInt32(dr[0]),
+                    Task = Convert.ToString(dr[1]),
+                    Duration = Convert.ToInt32(dr[2]),
+                    StartTime = GetIdealStartTimeForTask(Convert.ToInt32(dr[3])).ToShortTimeString(),
+                    EndTime = GetIdealEndTimeForTask(Convert.ToInt32(dr[3]), Convert.ToInt32(dr[2])).ToShortTimeString(),
+                    Status = Convert.ToString(dr[4])
                 };
                 taskLists.Add(details);
             }
@@ -95,6 +99,28 @@ namespace OneTimeProgress.DataAccessLayer
             DateTime startTime = GetIdealStartTimeForTask(startMinutes);
             endTime = (startTime.AddMinutes(Endminutes));
             return endTime;
+        }
+        public List<ALLTaskLists> GetStatusOfAllTasks(string flightNumber)
+        {
+            List<ALLTaskLists> taskLists = new List<ALLTaskLists>();
+            SqlCommand sda;
+            SqlConnection con = new SqlConnection(connection);
+            con.Open();
+            sda = new SqlCommand("GetStatusOfAllTasks @flightNumber", con);
+            SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
+            sda.Parameters.Add(p1);
+            SqlDataReader dr = sda.ExecuteReader();
+            while (dr.Read())
+            {
+                ALLTaskLists details = new ALLTaskLists()
+                {
+                    Task = Convert.ToString(dr[0]),
+                    Status = Convert.ToString(dr[1]),
+                };
+                taskLists.Add(details);
+            }
+            con.Close();
+            return taskLists;
         }
         public FlightDetails GetDetailsForOneFlight(string flightNumber)
         {
@@ -117,6 +143,23 @@ namespace OneTimeProgress.DataAccessLayer
             }
             con.Close();
             return flightDetails;
+        }
+        public void UpdateTaskStatus(string flightNumber, string id, string statusUpdate)
+        {
+            int j;
+            SqlCommand sda;
+            SqlConnection con = new SqlConnection(connection);
+
+            con.Open();
+            sda = new SqlCommand("UpdateTaskStatus @flightNumber,@id,@statusUpdate", con);
+            SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
+            SqlParameter p2 = new SqlParameter("@id", id);
+            SqlParameter p3 = new SqlParameter("@statusUpdate", statusUpdate);
+            sda.Parameters.Add(p1);
+            sda.Parameters.Add(p2);
+            sda.Parameters.Add(p3);
+            j = sda.ExecuteNonQuery();
+            con.Close();
         }
     }
 }

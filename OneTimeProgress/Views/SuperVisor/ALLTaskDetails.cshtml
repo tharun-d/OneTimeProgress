@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = "ALLTaskDetails";
+}
+<script>
+    window.setInterval(function () {
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var s = today.getSeconds();
+        m = checkTime(m);
+        s = checkTime(s);
+        document.getElementById('timer').innerHTML = h + ":" + m + ":" + s;
+
+    }, 1000);
+    function checkTime(i) {
+        if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
+        return i;
+    }
+</script>
+<form method="post">
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>
+                    Flight Number: @ViewBag.FlightNumber <br />
+                    Current Station: @ViewBag.CurrentStation
+                </th>
+                <th>
+                    Departure Time: @ViewBag.DepartureTime <br />
+                    <div>Current Time: <span id="timer"></span> </div>
+                </th>
+            </tr>
+            <tr>
+                <th>Task Detail</th>
+                <th>Staff Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.TaskLists)
+            {
+                if (item.Status == "Yet To Start")
+                {
+                    <tr bgcolor="orange">
+                        <td>@item.Task</td>
+                        <td>Tharun</td>
+                        <td>
+                            <span>@item.Status</span><br />
+                        </td>
+                    </tr>
+                }
+                if (item.Status == "In Progress")
+                {
+                    <tr bgcolor="yellow">
+                        <td>@item.Task</td>
+                        <td>Tharun</td>
+                        <td>
+                            <span>@item.Status</span><br />
+                        </td>
+                    </tr>
+                }
+                if (item.Status == "Completed")
+                {
+                    <tr bgcolor="green">
+                        <td>@item.Task</td>
+                        <td>Tharun</td>
+                        <td>
+                            <span>@item.Status</span><br />
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</form>
+

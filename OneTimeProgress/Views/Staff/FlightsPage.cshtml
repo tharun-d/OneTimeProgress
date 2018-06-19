@@ -2,14 +2,15 @@
 @{
     ViewBag.Title = "FlightsPage";
 }
-
+<span>Welcome Tharun</span><br />
+<span>Current Station : MAA</span>
+<br /><br />
 <form method="post">
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
                 <th>Flight Number</th>
-                <th>Flight Model</th>
-                <th>Current Station</th>
+                <th>Flight Model</th> 
                 <th>Bay</th>
                 <th>Tasks Start Time</th>
                 <th>Flight Departure</th>
@@ -23,7 +24,6 @@
             <tr>
                 <td>@item.FlightNumber</td>
                 <td>@item.FlightModel</td>
-                <td>@item.CurrentStation</td>
                 <td>@item.Bay</td>
                 <td>@item.TaskStartTime AM</td>
                 <td>@item.Departure AM</td>
