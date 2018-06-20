@@ -1,12 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Runtime.Caching;
+using System.Configuration;
 
 namespace OneTimeProgress.Common
 {
     public class CommonThings
     {
-        public readonly string hi="hi";
+        private static string key = "CONN_STRING";
+        private static ObjectCache _cache = MemoryCache.Default;
+        // keeping connectin  string in Cache 24 hours 
+        private static int _defaultCacheExpireInSeconds = 86400;
+        public static string GetConnectionString()
+        {
+            string connString = string.Empty;
+            if (_cache.Contains(key))
+            {
+                connString = (string)_cache.Get(key);
+            }
+            else
+            {
+                 connString = ConfigurationManager.ConnectionStrings["Dev"].ConnectionString;
+                _cache.Add(key, connString, DateTimeOffset.Now.AddSeconds(_defaultCacheExpireInSeconds));
+            }
+
+            return connString;
+        }
+        #region Procedures
+        public readonly string loginValidator = "LoginValidator @userName,@password";
+        public readonly string getAllFlightsDetails = "GetAllFlightsDetails";
+        public readonly string getTasksForParticularFlight = "GetTasksForParticularFlight @flightNumber";
+        public readonly string getStatusOfAllTasks = "GetStatusOfAllTasks @flightNumber";
+        public readonly string getDetailsForOneFlight = "GetDetailsForOneFlight @flightNumber";
+        public readonly string updateTaskStatus = "UpdateTaskStatus @flightNumber,@id,@statusUpdate";
+        #endregion
     }
 }

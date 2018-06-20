@@ -4,20 +4,72 @@ using System.Linq;
 using System.Web;
 using OneTimeProgress.DataAccessLayer;
 using OneTimeProgress.BussinessEntity;
-
 namespace OneTimeProgress.BussinessLayer
 {
     public class Bussines
     {
         DataAccess dataAccess = new DataAccess();
+        //CommonThings commonThings = new CommonThings();
+        //private string GetConnectionString()
+        //{
+        //    return CommonThings.GetConnectionString();
+        //}
         public string LoginValidator(LoginModel loginModel)
         {
             return dataAccess.LoginValidator(loginModel);
         }
+        //public string LoginValidator(LoginModel loginModel)
+        //{
+        //    string connectionString;
+        //    DataSet dataSet = new DataSet();
+        //    connectionString = GetConnectionString();
+        //    SqlParameter[] storedParams = new SqlParameter[2];
+        //    storedParams[0] = new SqlParameter("@userName", loginModel.userName);
+        //    storedParams[1] = new SqlParameter("@password", loginModel.password);
+        //    dataSet = DAL.ExecuteDataset(connectionString, CommandType.StoredProcedure, commonThings.loginValidator, storedParams);
+        //    if (dataSet.Tables.Count > 0)
+        //    {
+        //        return dataSet.Tables[0].Rows[0][0].ToString();
+        //    }
+        //    else
+        //        return "Not Found";
+        //}
         public List<FlightDetails> GetAllFlightDetails()
         {
             return dataAccess.GetAllFlightDetails();
         }
+        //public List<FlightDetails> GetAllFlightDetails()
+        //{
+        //    List<FlightDetails> flightDetails = new List<FlightDetails>();
+        //    string connectionString;
+        //    DataSet dataSet = new DataSet();
+        //    connectionString = GetConnectionString();
+        //    SqlParameter[] storedParams = new SqlParameter[1];
+        //    dataSet = DAL.ExecuteDataset(connectionString, CommandType.StoredProcedure, commonThings.loginValidator, storedParams);
+        //    if (dataSet.Tables.Count > 0)
+        //    {
+        //        int rowsCount = dataSet.Tables[0].Rows.Count;
+        //        int colomnsCount = dataSet.Tables[0].Columns.Count;
+
+        //        for (int i = 0; i < rowsCount; i++)
+        //        {
+        //            for (int j = 0; j < colomnsCount; j++)
+        //            {
+        //                FlightDetails FD = new FlightDetails()
+        //                {
+        //                    FlightNumber = Convert.ToString(dataSet.Tables[0].Rows[i][j]),
+        //                    FlightModel = Convert.ToString(dr[1]),
+        //                    CurrentStation = Convert.ToString(dr[2]),
+        //                    Bay = Convert.ToInt32(dr[3]),
+        //                    TaskStartTime = Convert.ToString(dr[4]),
+        //                    Departure = Convert.ToString(dr[5])
+        //                };
+        //                flightDetails.Add(FD);
+        //            }
+        //        }
+
+        //    }
+        //}
         public List<TaskLists> GetTasksForParticularFlight(string flightNumber)
         {
             return dataAccess.GetTasksForParticularFlight(flightNumber);

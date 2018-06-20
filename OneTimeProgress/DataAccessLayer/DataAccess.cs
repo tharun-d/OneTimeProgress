@@ -6,20 +6,27 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using OneTimeProgress.BussinessEntity;
+using OneTimeProgress.Common;
 
 namespace OneTimeProgress.DataAccessLayer
 {
     public class DataAccess
     {
-        string connection = ConfigurationManager.ConnectionStrings["Dev"].ConnectionString;
+        CommonThings commonThings = new CommonThings();
+        private string GetConnectionString()
+        {
+            return CommonThings.GetConnectionString();
+        }
         public string LoginValidator(LoginModel loginModel)
         {
             string result;
             SqlCommand sda;
-            SqlConnection con = new SqlConnection(connection);
-
-            con.Open();
-            sda = new SqlCommand("LoginValidator @userName,@password", con);
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.loginValidator, con);
             SqlParameter p1 = new SqlParameter("@userName", loginModel.userName);
             SqlParameter p2 = new SqlParameter("@password", loginModel.password);
             sda.Parameters.Add(p1);
@@ -40,9 +47,12 @@ namespace OneTimeProgress.DataAccessLayer
             List<FlightDetails> flightDetails = new List<FlightDetails>();
 
             SqlCommand sda;
-            SqlConnection con = new SqlConnection(connection);
-            con.Open();
-            sda = new SqlCommand("GetAllFlightsDetails", con);
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.getAllFlightsDetails, con);
             SqlDataReader dr = sda.ExecuteReader();
             while (dr.Read())
             {
@@ -64,9 +74,12 @@ namespace OneTimeProgress.DataAccessLayer
         {
             List<TaskLists> taskLists = new List<TaskLists>();
             SqlCommand sda;
-            SqlConnection con = new SqlConnection(connection);
-            con.Open();
-            sda = new SqlCommand("GetTasksForParticularFlight @flightNumber", con);
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.getTasksForParticularFlight, con);
             SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
             sda.Parameters.Add(p1);
             SqlDataReader dr = sda.ExecuteReader();
@@ -104,9 +117,12 @@ namespace OneTimeProgress.DataAccessLayer
         {
             List<ALLTaskLists> taskLists = new List<ALLTaskLists>();
             SqlCommand sda;
-            SqlConnection con = new SqlConnection(connection);
-            con.Open();
-            sda = new SqlCommand("GetStatusOfAllTasks @flightNumber", con);
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.getStatusOfAllTasks, con);
             SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
             sda.Parameters.Add(p1);
             SqlDataReader dr = sda.ExecuteReader();
@@ -126,9 +142,12 @@ namespace OneTimeProgress.DataAccessLayer
         {
             FlightDetails flightDetails = new FlightDetails();
             SqlCommand sda;
-            SqlConnection con = new SqlConnection(connection);
-            con.Open();
-            sda = new SqlCommand("GetDetailsForOneFlight @flightNumber", con);
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.getDetailsForOneFlight, con);
             SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
             sda.Parameters.Add(p1);
             SqlDataReader dr = sda.ExecuteReader();
@@ -148,10 +167,12 @@ namespace OneTimeProgress.DataAccessLayer
         {
             int j;
             SqlCommand sda;
-            SqlConnection con = new SqlConnection(connection);
-
-            con.Open();
-            sda = new SqlCommand("UpdateTaskStatus @flightNumber,@id,@statusUpdate", con);
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.updateTaskStatus, con);
             SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
             SqlParameter p2 = new SqlParameter("@id", id);
             SqlParameter p3 = new SqlParameter("@statusUpdate", statusUpdate);
