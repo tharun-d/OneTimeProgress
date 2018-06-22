@@ -31,7 +31,10 @@ namespace OneTimeProgress.Common
         public readonly string getTasksForParticularFlight = "GetTasksForParticularFlight @flightNumber";
         public readonly string getStatusOfAllTasks = "GetStatusOfAllTasks @flightNumber";
         public readonly string getDetailsForOneFlight = "GetDetailsForOneFlight @flightNumber";
-        public readonly string updateTaskStatus = "UpdateTaskStatus @flightNumber,@id,@statusUpdate";
+        public readonly string updateTaskStartTime = "UpdateTaskStartTime @flightNumber,@id,@statusUpdate,@currentTime";
+        public readonly string updateTaskEndTime = "UpdateTaskEndTime @flightNumber,@id,@statusUpdate,@currentTime,@timeDifference";
+        public readonly string gettingStartTime = "GettingStartTime @flightNumber,@id";
+        public readonly string gettingEndTime = "GettingEndTime @flightNumber,@id";
         #endregion
     }
 }

@@ -90,9 +90,9 @@ namespace OneTimeProgress.DataAccessLayer
                     Id= Convert.ToInt32(dr[0]),
                     Task = Convert.ToString(dr[1]),
                     Duration = Convert.ToInt32(dr[2]),
-                    StartTime = GetIdealStartTimeForTask(Convert.ToInt32(dr[3])).ToShortTimeString(),
-                    EndTime = GetIdealEndTimeForTask(Convert.ToInt32(dr[3]), Convert.ToInt32(dr[2])).ToShortTimeString(),
-                    Status = Convert.ToString(dr[4])
+                    StartTime = (Convert.ToDateTime(dr[3])).ToShortTimeString(),
+                    EndTime = (Convert.ToDateTime(dr[4])).ToShortTimeString(),
+                    Status = Convert.ToString(dr[5])
                 };
                 taskLists.Add(details);
             }
@@ -163,7 +163,7 @@ namespace OneTimeProgress.DataAccessLayer
             con.Close();
             return flightDetails;
         }
-        public void UpdateTaskStatus(string flightNumber, string id, string statusUpdate)
+        public void UpdateTaskStartStatus(string flightNumber, string id, string statusUpdate,DateTime currentTime)
         {
             int j;
             SqlCommand sda;
@@ -172,15 +172,86 @@ namespace OneTimeProgress.DataAccessLayer
             {
                 con.Open();
             }
-            sda = new SqlCommand(commonThings.updateTaskStatus, con);
+            sda = new SqlCommand(commonThings.updateTaskStartTime, con);
             SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
             SqlParameter p2 = new SqlParameter("@id", id);
             SqlParameter p3 = new SqlParameter("@statusUpdate", statusUpdate);
+            SqlParameter p4 = new SqlParameter("@currentTime", currentTime);
             sda.Parameters.Add(p1);
             sda.Parameters.Add(p2);
             sda.Parameters.Add(p3);
+            sda.Parameters.Add(p4);
             j = sda.ExecuteNonQuery();
             con.Close();
+        }
+        public void UpdateTaskEndStatus(string flightNumber, string id, string statusUpdate, DateTime currentTime,int timeDifference)
+        {
+            int j;
+            SqlCommand sda;
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }  
+            sda = new SqlCommand(commonThings.updateTaskEndTime, con);
+            SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
+            SqlParameter p2 = new SqlParameter("@id", id);
+            SqlParameter p3 = new SqlParameter("@statusUpdate", statusUpdate);
+            SqlParameter p4 = new SqlParameter("@currentTime", currentTime);
+            SqlParameter p5 = new SqlParameter("@timeDifference", timeDifference);
+            sda.Parameters.Add(p1);
+            sda.Parameters.Add(p2);
+            sda.Parameters.Add(p3);
+            sda.Parameters.Add(p4);
+            sda.Parameters.Add(p5);
+            j = sda.ExecuteNonQuery();
+            con.Close();
+        }
+        public DateTime GettingStartTime(string flightNumber, string id)
+        {
+            DateTime sheduledStartTime;
+            SqlCommand sda;
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.gettingStartTime, con);
+            SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
+            sda.Parameters.Add(p1);
+            SqlParameter p2 = new SqlParameter("@id", id);
+            sda.Parameters.Add(p2);
+            SqlDataReader dr = sda.ExecuteReader();
+            if (dr.Read())
+            {
+                sheduledStartTime = Convert.ToDateTime(dr[0]);
+                con.Close();
+                return sheduledStartTime;
+            }
+            return DateTime.Now;
+        }
+        public DateTime GettingEndTime(string flightNumber, string id)
+        {
+            DateTime sheduledEndTime;
+            SqlCommand sda;
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.gettingEndTime, con);
+            SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
+            sda.Parameters.Add(p1);
+            SqlParameter p2 = new SqlParameter("@id", id);
+            sda.Parameters.Add(p2);
+            SqlDataReader dr = sda.ExecuteReader();
+            if (dr.Read())
+            {
+                sheduledEndTime = Convert.ToDateTime(dr[0]);
+                con.Close();
+                return sheduledEndTime;
+            }
+            return DateTime.Now;
         }
     }
 }

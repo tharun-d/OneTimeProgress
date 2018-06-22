@@ -82,9 +82,21 @@ namespace OneTimeProgress.BussinessLayer
         {
             return dataAccess.GetDetailsForOneFlight(flightNumber);
         }
-        public void UpdateTaskStatus(string flightNumber,string task,string statusUpdate)
+        public void UpdateTaskStartStatus(string flightNumber,string task,string statusUpdate,DateTime currentTime)
         {
-           dataAccess.UpdateTaskStatus(flightNumber,task, statusUpdate);
+           dataAccess.UpdateTaskStartStatus(flightNumber,task, statusUpdate,currentTime);
+        }
+        public void UpdateTaskEndStatus(string flightNumber, string task, string statusUpdate, DateTime currentTime,int timeDifference)
+        {
+            dataAccess.UpdateTaskEndStatus(flightNumber, task, statusUpdate, currentTime,timeDifference);
+        }
+        public DateTime GettingStartTime(string flightNumber,string id)
+        {
+           return dataAccess.GettingStartTime(flightNumber, id);
+        }
+        public DateTime GettingEndTime(string flightNumber, string id)
+        {
+            return dataAccess.GettingEndTime(flightNumber, id);
         }
     }
 }

@@ -56,8 +56,12 @@ id int identity(1,1),
 flightNumber varchar(max),
 taskDetail varchar(max),
 duration int,
-startTime int,
-statusOfTask varchar(max)
+startTime datetime,
+endTime datetime,
+statusOfTask varchar(max),
+actualStartTime datetime,
+actualEndTime datetime,
+timeDifference int
 )
 ----------------------------------
 drop table TaskList
@@ -66,12 +70,16 @@ create procedure InsertIntoTaskList
 (
 @flightNumber varchar(max),
 @taskDetail varchar(max),
-@duration varchar(max),
-@startTime varchar(max),
-@statusOfTask varchar(max)
+@duration int,
+@startTime datetime,
+@endTime datetime,
+@statusOfTask varchar(max),
+@actualStartTime datetime,
+@actualEndTime datetime,
+@timeDifference int
 ) as
 begin
-insert into TaskList values(@flightNumber,@taskDetail,@duration,@startTime,@statusOfTask)
+insert into TaskList values(@flightNumber,@taskDetail,@duration,@startTime,@endTime,@statusOfTask,@actualStartTime,@actualEndTime,@timeDifference)
 end
 ------------------------------
 drop procedure InsertIntoTaskList
@@ -79,11 +87,13 @@ drop procedure InsertIntoTaskList
 alter procedure GetTasksForParticularFlight(@flightNumber varchar(max))
 as
 begin
-select Id,taskDetail,duration,startTime,statusOfTask from TaskList
+select Id,taskDetail,duration,startTime,endTime,statusOfTask from TaskList
 where flightNumber=@flightNumber
-order by startTime desc
+order by startTime
 end
 ----------------
+drop procedure GetTasksForParticularFlight
+----
 create procedure GetDetailsForOneFlight(@flightNumber varchar(max))
 as
 begin
@@ -99,18 +109,57 @@ where flightNumber=@flightNumber
 order by startTime desc
 end
 ---------------------
-alter procedure UpdateTaskStatus
+create procedure UpdateTaskStartTime
 (
 @flightNumber varchar(max),
 @id varchar(max),
-@statusUpdate varchar(max)
+@statusUpdate varchar(max),
+@currentTime datetime
 ) as 
 begin
 update TaskList
-set statusOfTask=@statusUpdate
+set statusOfTask=@statusUpdate,actualStartTime=@currentTime
 where flightNumber=@flightNumber and id=@id
 end
 ---------------------
-select * from tasklist where flightNumber='1001'
+drop procedure UpdateTaskStartTime
+---------------------------
+create procedure UpdateTaskEndTime
+(
+@flightNumber varchar(max),
+@id varchar(max),
+@statusUpdate varchar(max),
+@currentTime datetime,
+@timeDifference int
+) as 
+begin
+update TaskList
+set statusOfTask=@statusUpdate,actualEndTime=@currentTime,timeDifference=@timeDifference
+where flightNumber=@flightNumber and id=@id
+end
+---------------------
+drop procedure UpdateTaskEndTime
+---------------------------
+alter procedure GettingStartTime(@flightnumber varchar(max),@id int) as
+begin
+select starttime from TaskList
+where flightNumber=@flightnumber and id=@id
+end
+---------
+drop procedure GettingStartTime
+-----------------------------
+create procedure GettingEndTime(@flightnumber varchar(max),@id int) as
+begin
+select Endtime from TaskList
+where flightNumber=@flightnumber and id=@id
+end
+---------
+drop procedure GettingEndTime
+-----------------------------
+delete from tasklist
+select timedifference from tasklist where flightNumber='1001'
 GetTasksForParticularFlight '1001'
-UpdateTaskStatus '1001','4','hhhd'
+UpdateTaskEndTime '1001','6','ggg','sd'
+
+select taskdetail,duration,startTime,endTime,actualStartTime,actualEndTime,DateDiff(MINUTE,actualEndTime,actualStartTime) 
+as diff from tasklist

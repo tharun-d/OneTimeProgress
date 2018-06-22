@@ -69,20 +69,27 @@ namespace OneTimeProgress.Controllers
         [HttpPost]
         public ActionResult TaskDetails(string Start,string Complete)
         {
+            DateTime sheduledStartTime;
+            int timeDifference;
             string flightNumber = Session["flightNumber"].ToString();
             if (string.IsNullOrEmpty(Start))
             {
-                bussines.UpdateTaskStatus(flightNumber, Complete,"Completed");
+                sheduledStartTime = bussines.GettingEndTime(flightNumber, Complete);
+                timeDifference = (DateTime.Now - sheduledStartTime).Minutes;
+                bussines.UpdateTaskEndStatus(flightNumber, Complete,"Completed", DateTime.Now,timeDifference);
                 return RedirectToAction("TaskDetails");
             }
             else
             {
-                bussines.UpdateTaskStatus(flightNumber, Start, "In Progress");
+                bussines.UpdateTaskStartStatus(flightNumber, Start, "In Progress", DateTime.Now);
                 return RedirectToAction("TaskDetails");
             }
         }
         public string InsertTasks()
         {
+            DateTime flightdeparture = (DateTime.Now.AddHours(2));
+            DateTime startTime;
+            DateTime endTime;
             string _path = @"C:\Users\hpadmin\Desktop\Standard\TaskDetails.xlsx";
             FileStream stream = new FileStream(_path, FileMode.Open, FileAccess.Read);
             SqlConnection con = new SqlConnection("Server=HIB30BWAX2; Initial Catalog = OneTimeProgress; User ID = sa; Password = Passw0rd@12;");
@@ -94,12 +101,18 @@ namespace OneTimeProgress.Controllers
                 con.Open();
                 while (reader.Read())
                 {
-                    SqlCommand cmd = new SqlCommand("InsertIntoTaskList @flightNumber,@taskDetail,@duration,@startTime,@statusOfTask", con);
+                    SqlCommand cmd = new SqlCommand("InsertIntoTaskList @flightNumber,@taskDetail,@duration,@startTime,@endTime,@statusOfTask,@actualStartTime,@actualEndTime,@timeDifference", con);
                     cmd.Parameters.AddWithValue("@flightNumber", reader.GetDouble(0));
                     cmd.Parameters.AddWithValue("@taskDetail", reader.GetString(1));
-                    cmd.Parameters.AddWithValue("@startTime", reader.GetDouble(2));
+                    startTime = (flightdeparture.AddMinutes(-reader.GetDouble(2)));
+                    cmd.Parameters.AddWithValue("@startTime", startTime);
                     cmd.Parameters.AddWithValue("@duration", reader.GetDouble(3));
+                    endTime = startTime.AddMinutes(reader.GetDouble(3));
+                    cmd.Parameters.AddWithValue("@endTime", endTime);
                     cmd.Parameters.AddWithValue("@statusOfTask", "Yet To Start");
+                    cmd.Parameters.AddWithValue("@actualStartTime", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@actualEndTime", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@timeDifference", 0);
                     j = cmd.ExecuteNonQuery();
                 }
                 con.Close();
