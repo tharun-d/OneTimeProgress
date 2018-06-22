@@ -20,7 +20,7 @@
 </script>
 <form method="post">
 
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>
@@ -34,42 +34,56 @@
             </tr>
             <tr>
                 <th>Task Detail</th>
-                <th>Staff Name</th>
+                <th>Duration</th>
+                <th>Sheduled Start</th>
+                <th>Sheduled End</th>
+                <th>Actual Start</th>
+                <th>Actual End</th>
                 <th>Status</th>
+                <th>Resource Assigned</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in ViewBag.TaskLists)
             {
-                if (item.Status == "Yet To Start")
+                if (item.StatusOfTask == "Yet To Start")
                 {
-                    <tr bgcolor="orange">
-                        <td>@item.Task</td>
-                        <td>Tharun</td>
-                        <td>
-                            <span>@item.Status</span><br />
-                        </td>
-                    </tr>
+            <tr>
+                <td>@item.Task</td>
+                <td>@item.Duration</td>
+                <td>@item.StartTime</td>
+                <td>@item.EndTime</td>
+                <td>@item.ActualStartTime</td>
+                <td>@item.ActualEndTime</td>
+                <td>-</td>
+                <td>Tharun</td>
+            </tr>
                 }
-                if (item.Status == "In Progress")
+                if (item.StatusOfTask == "In Progress")
                 {
-                    <tr bgcolor="yellow">
-                        <td>@item.Task</td>
-                        <td>Tharun</td>
-                        <td>
-                            <span>@item.Status</span><br />
-                        </td>
-                    </tr>
+            <tr bgcolor="yellow">
+                <td>@item.Task</td>
+                <td>@item.Duration</td>
+                <td>@item.StartTime</td>
+                <td>@item.EndTime</td>
+                <td>@item.ActualStartTime</td>
+                <td>@item.ActualEndTime</td>
+                <td>-</td>
+                <td>Tharun</td>
+            </tr>
                 }
-                if (item.Status == "Completed")
+                if (item.StatusOfTask == "Completed")
                 {
-                    <tr bgcolor="green">
-                        <td>@item.Task</td>
-                        <td>Tharun</td>
-                        <td>
-                            <span>@item.Status</span><br />
-                        </td>
-                    </tr>
+            <tr bgcolor="green">
+                <td>@item.Task</td>
+                <td>@item.Duration</td>
+                <td>@item.StartTime</td>
+                <td>@item.EndTime</td>
+                <td>@item.ActualStartTime</td>
+                <td>@item.ActualEndTime</td>
+                <td>@item.TimeDifference</td>
+                <td>Tharun</td>
+            </tr>
                 }
             }
         </tbody>

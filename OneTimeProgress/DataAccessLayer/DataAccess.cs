@@ -131,8 +131,30 @@ namespace OneTimeProgress.DataAccessLayer
                 ALLTaskLists details = new ALLTaskLists()
                 {
                     Task = Convert.ToString(dr[0]),
-                    Status = Convert.ToString(dr[1]),
+                    Duration = Convert.ToInt32(dr[1]),
+                    StartTime = Convert.ToDateTime(dr[2]).ToShortTimeString(),
+                    EndTime = Convert.ToDateTime(dr[3]).ToShortTimeString(),
+                    ActualStartTime = Convert.ToDateTime(dr[4]).ToShortTimeString(),
+                    ActualEndTime = Convert.ToDateTime(dr[5]).ToShortTimeString(),
+                    TimeDifference = Convert.ToInt32(dr[6]),
+                    StatusOfTask = Convert.ToString(dr[7])
+                    
                 };
+                if (details.StatusOfTask=="Yet To Start")
+                {
+                    details.TimeDifference = 0;
+                    details.ActualStartTime = "-";
+                    details.ActualEndTime = "-";
+                }
+                if (details.StatusOfTask == "In Progress")
+                {
+                    details.TimeDifference = 0;
+                    details.ActualEndTime = "-";
+                }
+                if (details.TimeDifference<0)
+                {
+                    details.TimeDifference = 0;
+                }
                 taskLists.Add(details);
             }
             con.Close();

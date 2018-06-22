@@ -31,7 +31,12 @@ namespace OneTimeProgress.BussinessEntity
     public class ALLTaskLists
     {
         public string Task { get; set; }
-        public string StaffName { get; set; }
-        public string Status { get; set; }
+        public int Duration { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
+        public string ActualStartTime { get; set; }
+        public string ActualEndTime { get; set; }
+        public int TimeDifference { get; set; }
+        public string StatusOfTask { get; set; }
     }
 }
