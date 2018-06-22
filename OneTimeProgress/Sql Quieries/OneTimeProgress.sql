@@ -101,12 +101,12 @@ select flightNumber,airCraftModel,currentStation,bayNumber,taskStartTime,departu
 where flightNumber=@flightNumber
 end
 ---------------
-create procedure GetStatusOfAllTasks(@flightNumber varchar(max))
+alter procedure GetStatusOfAllTasks(@flightNumber varchar(max))
 as
 begin
-select taskDetail,statusOfTask from TaskList
+select taskDetail,duration,startTime,EndTime,actualStartTime,actualEndTime,timedifference,statusOfTask from TaskList
 where flightNumber=@flightNumber
-order by startTime desc
+order by startTime
 end
 ---------------------
 create procedure UpdateTaskStartTime
