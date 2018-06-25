@@ -92,8 +92,27 @@ namespace OneTimeProgress.DataAccessLayer
                     Duration = Convert.ToInt32(dr[2]),
                     StartTime = (Convert.ToDateTime(dr[3])).ToShortTimeString(),
                     EndTime = (Convert.ToDateTime(dr[4])).ToShortTimeString(),
-                    Status = Convert.ToString(dr[5])
+                    Status = Convert.ToString(dr[5]),
+                    ActualStartTime = Convert.ToDateTime(dr[6]).ToShortTimeString(),
+                    ActualEndTime = Convert.ToDateTime(dr[7]).ToShortTimeString(),
+                    TimeDifference = Convert.ToInt32(dr[8])
                 };
+                if (details.Status == "Yet To Start")
+                {
+                    details.TimeDifference = 0;
+                    details.ActualStartTime = "-";
+                    details.ActualEndTime = "-";
+                }
+                if (details.Status == "In Progress")
+                {
+                    details.TimeDifference = 0;
+                    details.ActualEndTime = "-";
+                    details.CurrentTimeMinusActualStartTime = DateTime.Now.Subtract(Convert.ToDateTime(dr[6])).Minutes;
+                }
+                if (details.TimeDifference < 0)
+                {
+                    details.TimeDifference = 0;
+                }
                 taskLists.Add(details);
             }
             con.Close();

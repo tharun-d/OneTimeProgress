@@ -53,7 +53,7 @@ namespace OneTimeProgress.Controllers
         public ActionResult FlightsPage(string flightNumber)
         {
             Session["flightNumber"] = flightNumber;
-            return RedirectToAction("TaskDetails");
+            return RedirectToAction("TaskDetailsTest");
         }
         public ActionResult TaskDetails()
         {
@@ -83,6 +83,36 @@ namespace OneTimeProgress.Controllers
             {
                 bussines.UpdateTaskStartStatus(flightNumber, Start, "In Progress", DateTime.Now);
                 return RedirectToAction("TaskDetails");
+            }
+        }
+        public ActionResult TaskDetailsTest()
+        {
+            string flightNumber = Session["flightNumber"].ToString();
+            FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
+            ViewBag.FlightNumber = flightDetails.FlightNumber;
+            ViewBag.Bay = flightDetails.Bay;
+            ViewBag.CurrentStation = flightDetails.CurrentStation;
+            List<TaskLists> taskLists = bussines.GetTasksForParticularFlight(flightNumber);
+            ViewBag.TaskLists = taskLists;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult TaskDetailsTest(string Start, string Complete)
+        {
+            DateTime sheduledStartTime;
+            int timeDifference;
+            string flightNumber = Session["flightNumber"].ToString();
+            if (string.IsNullOrEmpty(Start))
+            {
+                sheduledStartTime = bussines.GettingEndTime(flightNumber, Complete);
+                timeDifference = (DateTime.Now - sheduledStartTime).Minutes;
+                bussines.UpdateTaskEndStatus(flightNumber, Complete, "Completed", DateTime.Now, timeDifference);
+                return RedirectToAction("TaskDetailsTest");
+            }
+            else
+            {
+                bussines.UpdateTaskStartStatus(flightNumber, Start, "In Progress", DateTime.Now);
+                return RedirectToAction("TaskDetailsTest");
             }
         }
         public string InsertTasks()

@@ -212,6 +212,7 @@
     <Content Include="Views\SuperVisor\Login.cshtml" />
     <Content Include="Views\SuperVisor\FlightsPage.cshtml" />
     <Content Include="Views\SuperVisor\ALLTaskDetails.cshtml" />
+    <Content Include="Views\Staff\TaskDetailsTest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
