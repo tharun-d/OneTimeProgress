@@ -87,15 +87,16 @@ namespace OneTimeProgress.DataAccessLayer
             {
                 TaskLists details = new TaskLists()
                 {
-                    Id= Convert.ToInt32(dr[0]),
+                    Id = Convert.ToInt32(dr[0]),
                     Task = Convert.ToString(dr[1]),
-                    Duration = Convert.ToInt32(dr[2]),
-                    StartTime = (Convert.ToDateTime(dr[3])).ToShortTimeString(),
-                    EndTime = (Convert.ToDateTime(dr[4])).ToShortTimeString(),
+                    Duration = Convert.ToInt32(dr[2]),//originaltimedifference
+                    StartTime = (Convert.ToDateTime(dr[3])).ToString("HH:mm"),
+                    EndTime = (Convert.ToDateTime(dr[4])).ToString("HH:mm"),
                     Status = Convert.ToString(dr[5]),
-                    ActualStartTime = Convert.ToDateTime(dr[6]).ToShortTimeString(),
-                    ActualEndTime = Convert.ToDateTime(dr[7]).ToShortTimeString(),
-                    TimeDifference = Convert.ToInt32(dr[8])
+                    ActualStartTime = Convert.ToDateTime(dr[6]).ToString("HH:mm"),
+                    ActualEndTime = Convert.ToDateTime(dr[7]).ToString("HH:mm"),
+                    TimeDifference = Convert.ToInt32(dr[8]),//actualtimedifference
+                    Colour = ""
                 };
                 if (details.Status == "Yet To Start")
                 {
@@ -113,7 +114,14 @@ namespace OneTimeProgress.DataAccessLayer
                 {
                     details.TimeDifference = 0;
                 }
-                taskLists.Add(details);
+                if (details.Status == "Completed")
+                {
+                    if (details.TimeDifference-details.Duration > 0)
+                    {
+                        details.Colour = "Red";
+                    }
+                }
+                    taskLists.Add(details);
             }
             con.Close();
             return taskLists;
@@ -155,8 +163,8 @@ namespace OneTimeProgress.DataAccessLayer
                     EndTime = Convert.ToDateTime(dr[3]).ToShortTimeString(),
                     ActualStartTime = Convert.ToDateTime(dr[4]).ToShortTimeString(),
                     ActualEndTime = Convert.ToDateTime(dr[5]).ToShortTimeString(),
-                    TimeDifference = Convert.ToInt32(dr[6]),
-                    StatusOfTask = Convert.ToString(dr[7])
+                    TimeDifference = Convert.ToInt32(dr[6]),//actualtimedifference
+                    StatusOfTask = Convert.ToString(dr[7]),
                     
                 };
                 if (details.StatusOfTask=="Yet To Start")

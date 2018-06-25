@@ -87,12 +87,12 @@ drop procedure InsertIntoTaskList
 alter procedure GetTasksForParticularFlight(@flightNumber varchar(max))
 as
 begin
-select Id,taskDetail,duration,startTime,endTime,statusOfTask from TaskList
+select Id,taskDetail,duration,startTime,endTime,statusOfTask,actualStartTime,actualEndTime,timedifference from TaskList
 where flightNumber=@flightNumber
 order by startTime
 end
 ----------------
-drop procedure GetTasksForParticularFlight
+drop procedure GetTasksForParticularFlight '1002'
 ----
 create procedure GetDetailsForOneFlight(@flightNumber varchar(max))
 as
@@ -163,3 +163,8 @@ UpdateTaskEndTime '1001','6','ggg','sd'
 
 select taskdetail,duration,startTime,endTime,actualStartTime,actualEndTime,DateDiff(MINUTE,actualEndTime,actualStartTime) 
 as diff from tasklist
+
+select * from tasklist
+update tasklist
+set timeDifference = 30
+where taskDetail='CARGO REPORTING' and flightNumber='1001'

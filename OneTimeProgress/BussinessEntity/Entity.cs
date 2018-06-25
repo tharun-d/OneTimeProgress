@@ -31,6 +31,7 @@ namespace OneTimeProgress.BussinessEntity
         public int TimeDifference { get; set; }
         public int CurrentTimeMinusActualStartTime { get; set; } // caluclated if Status is In Progress
         public string Status { get; set; }
+        public string Colour { get; set; }// status completed then check the timedifference - duration if it is>1 make it red bar
     }
     public class ALLTaskLists
     {
