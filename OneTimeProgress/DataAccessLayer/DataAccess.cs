@@ -95,7 +95,7 @@ namespace OneTimeProgress.DataAccessLayer
                     Status = Convert.ToString(dr[5]),
                     ActualStartTime = Convert.ToDateTime(dr[6]).ToString("HH:mm"),
                     ActualEndTime = Convert.ToDateTime(dr[7]).ToString("HH:mm"),
-                    TimeDifference = Convert.ToInt32(dr[8]),//actualtimedifference
+                    TimeDifference = Convert.ToInt32(dr[8]),//actualtimedifference   
                     Colour = ""
                 };
                 if (details.Status == "Yet To Start")
@@ -108,7 +108,12 @@ namespace OneTimeProgress.DataAccessLayer
                 {
                     details.TimeDifference = 0;
                     details.ActualEndTime = "-";
-                    details.CurrentTimeMinusActualStartTime = DateTime.Now.Subtract(Convert.ToDateTime(dr[6])).Minutes;
+                    details.CurrentTimeMinusActualStartTime = DateTime.Now.Subtract(Convert.ToDateTime(dr[6])).TotalMinutes;
+                    details.ProgressPercentage = ProgressCaluclator(details.CurrentTimeMinusActualStartTime, details.Duration);
+                    if(details.ProgressPercentage==100)
+                    {
+                        details.Colour = "Red";
+                    }
                 }
                 if (details.TimeDifference < 0)
                 {
@@ -125,6 +130,16 @@ namespace OneTimeProgress.DataAccessLayer
             }
             con.Close();
             return taskLists;
+        }
+        public double ProgressCaluclator(double currentDuration,int totalDuration)
+        {
+            double percentage;
+            percentage = (currentDuration / totalDuration)*100;
+            if (percentage>100)
+            {
+                return 100;
+            }
+            return percentage;
         }
         public DateTime GetIdealStartTimeForTask(int minutes)
         {
