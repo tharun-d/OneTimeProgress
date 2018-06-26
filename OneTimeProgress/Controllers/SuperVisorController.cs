@@ -26,14 +26,26 @@ namespace OneTimeProgress.Controllers
         public ActionResult FlightsPage(string flightNumber)
         {
             Session["SflightNumber"] = flightNumber;
-            return RedirectToAction("ALLTaskDetails");
+            return RedirectToAction("ALLTaskDetailsTest");
         }
         public ActionResult ALLTaskDetails()
         {
             string flightNumber = Session["SflightNumber"].ToString();
             FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
             ViewBag.FlightNumber = flightDetails.FlightNumber;
-            ViewBag.DepartureTime = DateTime.Now.AddHours(2).ToShortTimeString();
+            ViewBag.DepartureTime = "17:00";
+            ViewBag.CurrentStation = flightDetails.CurrentStation;
+            List<ALLTaskLists> taskLists = bussines.GetStatusOfAllTasks(flightNumber);
+            ViewBag.TaskLists = taskLists;
+            return View();
+        }
+        public ActionResult ALLTaskDetailsTest()
+        {
+            string flightNumber = Session["SflightNumber"].ToString();
+            FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
+            ViewBag.FlightNumber = flightDetails.FlightNumber;
+            ViewBag.DepartureTime = "17:00";
+            ViewBag.Department = "Ramp";
             ViewBag.CurrentStation = flightDetails.CurrentStation;
             List<ALLTaskLists> taskLists = bussines.GetStatusOfAllTasks(flightNumber);
             ViewBag.TaskLists = taskLists;

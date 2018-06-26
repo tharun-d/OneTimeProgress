@@ -6,25 +6,51 @@
 <span>Current Station : MAA</span>
 <br /><br />
 <form method="post">
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Flight Number</th>
-                <th>Flight Model</th>
-                <th>Departure</th>
-                <th>Status of Tasks</th>
+                <th>Equipment Model</th>
+                <th>Departure Time</th>
+                <th>Status</th>
+                <th>Details</th>
             </tr>
         </thead>
         <tbody>
 
             @foreach (var item in ViewBag.FlightDetails)
             {
-                <tr>
-                    <td>@item.FlightNumber</td>
-                    <td>@item.FlightModel</td>
-                    <td>@item.Departure AM</td>
-                    <td><button type="submit" name="flightNumber" class="btn btn-primary" value=@item.FlightNumber>Status Of Tasks</button></td>
-                </tr>
+                if (item.Status == "Departed - On time")
+                {
+                    <tr bgcolor="green">
+                        <td>@item.FlightNumber</td>
+                        <td>@item.FlightModel</td>
+                        <td>@item.Departure</td>
+                        <td>@item.Status</td>
+                        <td><button type="submit" name="flightNumber" class="btn btn-primary" value=@item.FlightNumber>Details Of Tasks</button></td>
+                    </tr>
+                }
+                else if (item.Status == "In Progress")
+                {
+                    <tr bgcolor="yellow">
+                        <td>@item.FlightNumber</td>
+                        <td>@item.FlightModel</td>
+                        <td>@item.Departure</td>
+                        <td>@item.Status</td>
+                        <td><button type="submit" name="flightNumber" class="btn btn-primary" value=@item.FlightNumber>Details Of Tasks</button></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td>@item.FlightNumber</td>
+                        <td>@item.FlightModel</td>
+                        <td>@item.Departure</td>
+                        <td>@item.Status</td>
+                        <td><button type="submit" name="flightNumber" class="btn btn-primary" value=@item.FlightNumber>Details Of Tasks</button></td>
+                    </tr>
+                }
+
             }
         </tbody>
     </table>

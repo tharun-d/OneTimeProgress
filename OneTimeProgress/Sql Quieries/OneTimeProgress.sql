@@ -9,8 +9,9 @@ go
 ------------------
 drop table LoginDetails
 ---------------------
-insert into LoginDetails values('tharundintakurthi@gmail.com','tharun','Staff')
-insert into LoginDetails values('ajaydintakurthi@gmail.com','ajay','Super Visor')
+insert into LoginDetails values('tharun@gmail.com','tharun','Staff')
+insert into LoginDetails values('ajay@gmail.com','ajay','Super Visor')
+insert into LoginDetails values('arjun@gmail.com','arjun','Manager')
 ------------------------------------------------
 go
 alter procedure LoginValidator(
@@ -20,7 +21,7 @@ alter procedure LoginValidator(
 begin
 select userType from LoginDetails
 where userName=@userName and secretPassword=@password
-end
+end		
 -----------------------------------------------
 go
 create table AllFlightDetails
@@ -37,16 +38,18 @@ departure varchar(max),
 drop table AllFlightDetails
 -----------------------------------------------------
 go
+insert into AllFlightDetails values('Flight0',1000,'Airbus A320-600','MAA',5,'9:00','11:00')
 insert into AllFlightDetails values('Flight1',1001,'Airbus A340-600','MAA',2,'12:00','13:00')
 insert into AllFlightDetails values('Flight2',1002,'Airbus A320-100/200','MAA',5,'13:00','14:20')
 insert into AllFlightDetails values('Flight3',1003,'Airbus A340-600','MAA',4,'14:00','15:30')
 insert into AllFlightDetails values('Flight4',1004,'Airbus A320-100/200','MAA',8,'16:00','17:00')
 ---------------------------
+delete from AllFlightDetails
 go
-create procedure GetAllFlightsDetails as
+alter procedure GetAllFlightsDetails as
 begin
 select flightNumber,airCraftModel,currentStation,bayNumber,taskStartTime,departure from AllFlightDetails
-ORDER BY taskStartTime
+ORDER BY departure
 end
 --------------------------------
 go
@@ -156,15 +159,75 @@ end
 ---------
 drop procedure GettingEndTime
 -----------------------------
+create procedure GettingActualStartTime(@flightnumber varchar(max),@id int) as
+begin
+select actualStartTime from TaskList
+where flightNumber=@flightnumber and id=@id
+end
+---------
+drop procedure GettingActualStartTime
+-----------------------------
 delete from tasklist
 select timedifference from tasklist where flightNumber='1001'
 GetTasksForParticularFlight '1001'
 UpdateTaskEndTime '1001','6','ggg','sd'
-
+--------------------------------------------------------------------------------------------------------------------
 select taskdetail,duration,startTime,endTime,actualStartTime,actualEndTime,DateDiff(MINUTE,actualEndTime,actualStartTime) 
 as diff from tasklist
-
+---------------------------------------------------------------------------------
 select * from tasklist
 update tasklist
 set timeDifference = 30
 where taskDetail='CARGO REPORTING' and flightNumber='1001'
+----------------------------------------------------------------------
+create table Departments
+(
+flightNumber varchar(max),
+departmentName varchar(max),
+superVisorName varchar(max),
+sheduledStartTime datetime,
+sheduledEndTime datetime,
+sheduledDuration int,
+actualStartTime datetime,
+actualEndTime datetime,
+statusOfDepartment varchar(max)
+)
+---
+drop table Departments
+--------------
+select * from departments
+--------------
+alter procedure InsertIntoDepartments
+(
+@flightNumber varchar(max),
+@departmentName varchar(max),
+@superVisorName varchar(max),
+@sheduledStartTime datetime,
+@sheduledEndTime datetime,
+@sheduledDuration int,
+@actualStartTime datetime,
+@actualEndTime datetime,
+@statusOfDepartment varchar(max)
+) as 
+begin
+insert into Departments values
+(
+@flightNumber,
+@departmentName,
+@superVisorName,
+@sheduledStartTime,
+@sheduledEndTime,
+@sheduledDuration,
+@actualStartTime,
+@actualEndTime,
+@statusOfDepartment
+)
+end
+-------------
+alter procedure GettingAllDepartmentsStatus(@flightNumber varchar(max))
+as
+begin
+select departmentName,superVisorName,sheduledStartTime,sheduledEndTime,actualStartTime,actualEndTime,statusOfDepartment from Departments
+where flightNumber=@flightNumber
+end
+----------------------

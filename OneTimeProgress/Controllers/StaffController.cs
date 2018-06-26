@@ -31,12 +31,17 @@ namespace OneTimeProgress.Controllers
             if (bussines.LoginValidator(loginModel)=="Staff")
             {
                 Session["StaffName"] = loginModel.userName;
-                return RedirectToAction("FlightsPage");
+                return RedirectToAction("TaskDetailsTest");
             }
             if (bussines.LoginValidator(loginModel) == "Super Visor")
             {
                 Session["SuperVisorName"] = loginModel.userName;
                 return RedirectToAction("FlightsPage","SuperVisor");
+            }
+            if (bussines.LoginValidator(loginModel) == "Manager")
+            {
+                Session["Manager"] = loginModel.userName;
+                return RedirectToAction("DepartmentStatus", "Manager");
             }
 
             ViewBag.Message = "Sorry we dont find you";
@@ -87,11 +92,11 @@ namespace OneTimeProgress.Controllers
         }
         public ActionResult TaskDetailsTest()
         {
+            Session["flightNumber"] = "1001";
             string flightNumber = Session["flightNumber"].ToString();
             FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
             ViewBag.FlightNumber = flightDetails.FlightNumber;
             ViewBag.Bay = flightDetails.Bay;
-            ViewBag.ProgressBar = 25.4855;
             ViewBag.CurrentStation = flightDetails.CurrentStation;
             List<TaskLists> taskLists = bussines.GetTasksForParticularFlight(flightNumber);
             ViewBag.TaskLists = taskLists;
@@ -100,13 +105,13 @@ namespace OneTimeProgress.Controllers
         [HttpPost]
         public ActionResult TaskDetailsTest(string Start, string Complete)
         {
-            DateTime sheduledStartTime;
-            int timeDifference;
+            DateTime ActualStartTime;
+            double timeDifference;
             string flightNumber = Session["flightNumber"].ToString();
             if (string.IsNullOrEmpty(Start))
             {
-                sheduledStartTime = bussines.GettingEndTime(flightNumber, Complete);
-                timeDifference = (DateTime.Now - sheduledStartTime).Minutes;
+                ActualStartTime = bussines.GettingActualStartTime(flightNumber, Complete);
+                timeDifference = (DateTime.Now.Subtract(ActualStartTime)).TotalMinutes;
                 bussines.UpdateTaskEndStatus(flightNumber, Complete, "Completed", DateTime.Now, timeDifference);
                 return RedirectToAction("TaskDetailsTest");
             }
@@ -116,11 +121,14 @@ namespace OneTimeProgress.Controllers
                 return RedirectToAction("TaskDetailsTest");
             }
         }
-        public string InsertTasks()
+        public string InsertTasksandDepartMents()
         {
             DateTime flightdeparture = (DateTime.Now.AddHours(2));
             DateTime startTime;
             DateTime endTime;
+            DateTime departmentStartTime;
+            DateTime departmentEndTime;
+            double departmentSheduledMinutes;
             string _path = @"C:\Users\hpadmin\Desktop\Standard\TaskDetails.xlsx";
             FileStream stream = new FileStream(_path, FileMode.Open, FileAccess.Read);
             SqlConnection con = new SqlConnection("Server=HIB30BWAX2; Initial Catalog = OneTimeProgress; User ID = sa; Password = Passw0rd@12;");
@@ -132,6 +140,7 @@ namespace OneTimeProgress.Controllers
                 con.Open();
                 while (reader.Read())
                 {
+                    
                     SqlCommand cmd = new SqlCommand("InsertIntoTaskList @flightNumber,@taskDetail,@duration,@startTime,@endTime,@statusOfTask,@actualStartTime,@actualEndTime,@timeDifference", con);
                     cmd.Parameters.AddWithValue("@flightNumber", reader.GetDouble(0));
                     cmd.Parameters.AddWithValue("@taskDetail", reader.GetString(1));
@@ -148,7 +157,32 @@ namespace OneTimeProgress.Controllers
                 }
                 con.Close();
             }
-            return "Inserted into Task List Table";
+            reader.NextResult();
+            if(true)
+            {
+                int j;
+                reader.Read();
+                con.Open();
+                while (reader.Read())
+                {
+                    departmentStartTime = flightdeparture.AddMinutes(-reader.GetDouble(3));
+                    departmentEndTime = flightdeparture.AddMinutes(-reader.GetDouble(4));
+                    departmentSheduledMinutes = departmentEndTime.Subtract(departmentStartTime).TotalMinutes;
+                    SqlCommand cmd = new SqlCommand("InsertIntoDepartments @flightNumber,@departmentName,@superVisorName,@sheduledStartTime,@sheduledEndTime,@sheduledDuration,@actualStartTime,@actualEndTime,@statusOfDepartment", con);
+                    cmd.Parameters.AddWithValue("@flightNumber", reader.GetDouble(0));
+                    cmd.Parameters.AddWithValue("@departmentName", reader.GetString(1));
+                    cmd.Parameters.AddWithValue("@superVisorName", reader.GetString(2));
+                    cmd.Parameters.AddWithValue("@sheduledStartTime", departmentStartTime);
+                    cmd.Parameters.AddWithValue("@sheduledEndTime", departmentEndTime);
+                    cmd.Parameters.AddWithValue("@sheduledDuration", departmentSheduledMinutes);
+                    cmd.Parameters.AddWithValue("@actualStartTime", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@actualEndTime", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@statusOfDepartment", "Yet To Start");
+                    j = cmd.ExecuteNonQuery();
+                }
+                con.Close();
+            }
+            return "Inserted into Task List and Department Table";
         }
     }
 }

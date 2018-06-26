@@ -157,6 +157,7 @@
     <Compile Include="BussinessLayer\Bussines.cs" />
     <Compile Include="Common\CommonThings.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ManagerController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="Controllers\SuperVisorController.cs" />
     <Compile Include="DataAccessLayer\DAL.cs" />
@@ -213,6 +214,8 @@
     <Content Include="Views\SuperVisor\FlightsPage.cshtml" />
     <Content Include="Views\SuperVisor\ALLTaskDetails.cshtml" />
     <Content Include="Views\Staff\TaskDetailsTest.cshtml" />
+    <Content Include="Views\SuperVisor\ALLTaskDetailsTest.cshtml" />
+    <Content Include="Views\Manager\DepartmentStatus.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

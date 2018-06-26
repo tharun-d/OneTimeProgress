@@ -18,6 +18,8 @@ namespace OneTimeProgress.BussinessEntity
         public int Bay { get; set; }
         public string TaskStartTime { get; set; }
         public string Departure { get; set; }
+        public string Status { get; set; }//tasks status
+        public string Colour { get; set; }//colour based on status
     }
     public class TaskLists
     {
@@ -36,13 +38,29 @@ namespace OneTimeProgress.BussinessEntity
     }
     public class ALLTaskLists
     {
+        public int Id { get; set; }
         public string Task { get; set; }
         public int Duration { get; set; }
         public string StartTime { get; set; }
-        public string EndTime { get; set; }
+        public string EndTime { get; set; } //starttime + duration
         public string ActualStartTime { get; set; }
         public string ActualEndTime { get; set; }
         public int TimeDifference { get; set; }
-        public string StatusOfTask { get; set; }
+        public double CurrentTimeMinusActualStartTime { get; set; } // caluclated if Status is In Progress
+        public string Status { get; set; }
+        public string Colour { get; set; }// status completed then check the timedifference - duration if it is>1 make it red bar
+        public double ProgressPercentage { get; set; }
+    }
+    public class Departments
+    {
+        public string DepatmentName { get; set; }
+        public string SupervisorName { get; set; }
+        public string SheduledStartTime { get; set; }
+        public string SheduledEndTime { get; set; }
+        public string SheduledDuration { get; set; }//sheduleend-shedulestart
+        public string ActualStartTime { get; set; }
+        public string ActualEndTime { get; set; }
+        public string ActualDuration { get; set; }//actualend-actualstart
+        public string StatusofDepatment { get; set; }
     }
 }
