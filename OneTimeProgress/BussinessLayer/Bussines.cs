@@ -14,7 +14,7 @@ namespace OneTimeProgress.BussinessLayer
         //{
         //    return CommonThings.GetConnectionString();
         //}
-        public string LoginValidator(LoginModel loginModel)
+        public ConfirmLoginModel LoginValidator(LoginModel loginModel)
         {
             return dataAccess.LoginValidator(loginModel);
         }
@@ -70,13 +70,13 @@ namespace OneTimeProgress.BussinessLayer
 
         //    }
         //}
-        public List<TaskLists> GetTasksForParticularFlight(string flightNumber)
+        public List<TaskLists> GetTasksForParticularFlight(string flightNumber, string staffName,string staffDepartment)
         {
-            return dataAccess.GetTasksForParticularFlight(flightNumber);
+            return dataAccess.GetTasksForParticularFlight(flightNumber,staffName,staffDepartment);
         }
-        public List<ALLTaskLists> GetStatusOfAllTasks(string flightNumber)
+        public List<ALLTaskLists> GetStatusOfAllTasks(string flightNumber,string superVisorDepartment)
         {
-            return dataAccess.GetStatusOfAllTasks(flightNumber);
+            return dataAccess.GetStatusOfAllTasks(flightNumber,superVisorDepartment);
         }
         public FlightDetails GetDetailsForOneFlight(string flightNumber)
         {

@@ -1,17 +1,22 @@
 create database OneTimeProgress
 go
 create table LoginDetails(
-userName varchar(max),
+Email varchar(max),
 secretPassword varchar(max),
-userType varchar(max)
+userName varchar(max),
+userType varchar(max),
+UserDepartment varchar(max)
 )
 go
 ------------------
 drop table LoginDetails
+delete from LoginDetails
 ---------------------
-insert into LoginDetails values('tharun@gmail.com','tharun','Staff')
-insert into LoginDetails values('ajay@gmail.com','ajay','Super Visor')
-insert into LoginDetails values('arjun@gmail.com','arjun','Manager')
+insert into LoginDetails values('tharun@gmail.com','tharun','Tharun','Staff','Ramp')
+insert into LoginDetails values('Athanu@gmail.com','athanu','Athanu','Staff','Gate')
+insert into LoginDetails values('ajay@gmail.com','ajay','Ajay','Super Visor','Ramp')
+insert into LoginDetails values('vijay@gmail.com','vijay','Vijay','Super Visor','Gate')
+insert into LoginDetails values('arjun@gmail.com','arjun','Arjun','Manager','Manager')
 ------------------------------------------------
 go
 alter procedure LoginValidator(
@@ -19,10 +24,11 @@ alter procedure LoginValidator(
 @password varchar(max)
 ) as
 begin
-select userType from LoginDetails
-where userName=@userName and secretPassword=@password
+select userName,userType,UserDepartment from LoginDetails
+where Email=@userName and secretPassword=@password
 end		
 -----------------------------------------------
+LoginValidator 'tharun@gmail.com','tharun'
 go
 create table AllFlightDetails
 (
@@ -64,7 +70,9 @@ endTime datetime,
 statusOfTask varchar(max),
 actualStartTime datetime,
 actualEndTime datetime,
-timeDifference int
+timeDifference int,
+department varchar(max),
+staffName varchar(max)
 )
 ----------------------------------
 drop table TaskList
@@ -79,23 +87,35 @@ create procedure InsertIntoTaskList
 @statusOfTask varchar(max),
 @actualStartTime datetime,
 @actualEndTime datetime,
-@timeDifference int
+@timeDifference int,
+@department varchar(max),
+@staffName varchar(max)
 ) as
 begin
-insert into TaskList values(@flightNumber,@taskDetail,@duration,@startTime,@endTime,@statusOfTask,@actualStartTime,@actualEndTime,@timeDifference)
+insert into TaskList values(@flightNumber,@taskDetail,@duration,@startTime,@endTime,@statusOfTask,@actualStartTime,@actualEndTime,@timeDifference,@department,@staffName)
 end
 ------------------------------
 drop procedure InsertIntoTaskList
 ---------
-alter procedure GetTasksForParticularFlight(@flightNumber varchar(max))
+alter procedure GetTasksForParticularFlight(@flightNumber varchar(max),@staffName varchar(max),@staffDepartment varchar(max))
 as
 begin
 select Id,taskDetail,duration,startTime,endTime,statusOfTask,actualStartTime,actualEndTime,timedifference from TaskList
-where flightNumber=@flightNumber
+where flightNumber=@flightNumber and staffName=@staffName and department=@staffDepartment
 order by startTime
 end
 ----------------
 drop procedure GetTasksForParticularFlight '1002'
+----
+alter procedure GetTasksForParticularFlightDepartmentWise(@flightNumber varchar(max),@superVisorDepartment varchar(max))
+as
+begin
+select Id,taskDetail,duration,startTime,endTime,statusOfTask,actualStartTime,actualEndTime,timedifference,staffName from TaskList
+where flightNumber=@flightNumber and department=@superVisorDepartment
+order by startTime
+end
+----------------
+drop procedure GetTasksForParticularFlightDepartmentWise '1002'
 ----
 create procedure GetDetailsForOneFlight(@flightNumber varchar(max))
 as
@@ -108,7 +128,7 @@ alter procedure GetStatusOfAllTasks(@flightNumber varchar(max))
 as
 begin
 select taskDetail,duration,startTime,EndTime,actualStartTime,actualEndTime,timedifference,statusOfTask from TaskList
-where flightNumber=@flightNumber
+where flightNumber=@flightNumber and userName=@staffName and userDepartment=@staffDepartment
 order by startTime
 end
 ---------------------
@@ -176,6 +196,7 @@ select taskdetail,duration,startTime,endTime,actualStartTime,actualEndTime,DateD
 as diff from tasklist
 ---------------------------------------------------------------------------------
 select * from tasklist
+delete from tasklist
 update tasklist
 set timeDifference = 30
 where taskDetail='CARGO REPORTING' and flightNumber='1001'
@@ -196,6 +217,7 @@ statusOfDepartment varchar(max)
 drop table Departments
 --------------
 select * from departments
+delete from departments
 --------------
 alter procedure InsertIntoDepartments
 (
@@ -227,7 +249,7 @@ end
 alter procedure GettingAllDepartmentsStatus(@flightNumber varchar(max))
 as
 begin
-select departmentName,superVisorName,sheduledStartTime,sheduledEndTime,actualStartTime,actualEndTime,statusOfDepartment from Departments
+select departmentName,superVisorName,sheduledStartTime,sheduledEndTime,sheduledDuration,actualStartTime,actualEndTime,statusOfDepartment from Departments
 where flightNumber=@flightNumber
 end
 ----------------------

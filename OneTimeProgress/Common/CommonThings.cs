@@ -28,7 +28,8 @@ namespace OneTimeProgress.Common
         #region Procedures
         public readonly string loginValidator = "LoginValidator @userName,@password";
         public readonly string getAllFlightsDetails = "GetAllFlightsDetails";
-        public readonly string getTasksForParticularFlight = "GetTasksForParticularFlight @flightNumber";
+        public readonly string getTasksForParticularFlight = "GetTasksForParticularFlight @flightNumber,@staffName,@staffDepartment";
+        public readonly string getTasksForParticularFlightDepartmentWise = "GetTasksForParticularFlightDepartmentWise @flightNumber,@supervisorDepartment";
         public readonly string getStatusOfAllTasks = "GetStatusOfAllTasks @flightNumber";
         public readonly string getDetailsForOneFlight = "GetDetailsForOneFlight @flightNumber";
         public readonly string updateTaskStartTime = "UpdateTaskStartTime @flightNumber,@id,@statusUpdate,@currentTime";

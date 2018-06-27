@@ -28,24 +28,30 @@ namespace OneTimeProgress.Controllers
         [HttpPost]
         public ActionResult Login(LoginModel loginModel)
         {
-            if (bussines.LoginValidator(loginModel)=="Staff")
+            ConfirmLoginModel confirmLoginModels = bussines.LoginValidator(loginModel);
+            if (confirmLoginModels.userType == "Staff")
             {
-                Session["StaffName"] = loginModel.userName;
+                Session["StaffName"] = confirmLoginModels.userName;
+                Session["StaffDepartment"] = confirmLoginModels.userDepartment;
                 return RedirectToAction("TaskDetailsTest");
             }
-            if (bussines.LoginValidator(loginModel) == "Super Visor")
+            else if (confirmLoginModels.userType == "Super Visor")
             {
-                Session["SuperVisorName"] = loginModel.userName;
+                Session["SuperVisorName"] = confirmLoginModels.userName;
+                Session["SuperVisorDepartment"] = confirmLoginModels.userDepartment;
                 return RedirectToAction("FlightsPage","SuperVisor");
             }
-            if (bussines.LoginValidator(loginModel) == "Manager")
+            else if (confirmLoginModels.userType == "Manager")
             {
-                Session["Manager"] = loginModel.userName;
+                Session["Manager"] = confirmLoginModels.userName;
                 return RedirectToAction("DepartmentStatus", "Manager");
             }
-
-            ViewBag.Message = "Sorry we dont find you";
-            return View();
+            else
+            {
+                ViewBag.Message = "Sorry we dont find you";
+                return View();
+            }
+            
         }
 
         public ActionResult FlightsPage()
@@ -60,45 +66,48 @@ namespace OneTimeProgress.Controllers
             Session["flightNumber"] = flightNumber;
             return RedirectToAction("TaskDetailsTest");
         }
-        public ActionResult TaskDetails()
-        {
-            string flightNumber = Session["flightNumber"].ToString();
-            FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
-            ViewBag.FlightNumber = flightDetails.FlightNumber;
-            ViewBag.Bay = flightDetails.Bay;
-            ViewBag.CurrentStation = flightDetails.CurrentStation;
-            List<TaskLists> taskLists = bussines.GetTasksForParticularFlight(flightNumber);
-            ViewBag.TaskLists = taskLists;
-            return View();
-        }
-        [HttpPost]
-        public ActionResult TaskDetails(string Start,string Complete)
-        {
-            DateTime sheduledStartTime;
-            int timeDifference;
-            string flightNumber = Session["flightNumber"].ToString();
-            if (string.IsNullOrEmpty(Start))
-            {
-                sheduledStartTime = bussines.GettingEndTime(flightNumber, Complete);
-                timeDifference = (DateTime.Now - sheduledStartTime).Minutes;
-                bussines.UpdateTaskEndStatus(flightNumber, Complete,"Completed", DateTime.Now,timeDifference);
-                return RedirectToAction("TaskDetails");
-            }
-            else
-            {
-                bussines.UpdateTaskStartStatus(flightNumber, Start, "In Progress", DateTime.Now);
-                return RedirectToAction("TaskDetails");
-            }
-        }
+        //public ActionResult TaskDetails()
+        //{
+        //    string flightNumber = Session["flightNumber"].ToString();
+        //    FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
+        //    ViewBag.FlightNumber = flightDetails.FlightNumber;
+        //    ViewBag.Bay = flightDetails.Bay;
+        //    ViewBag.CurrentStation = flightDetails.CurrentStation;
+        //    List<TaskLists> taskLists = bussines.GetTasksForParticularFlight(flightNumber);
+        //    ViewBag.TaskLists = taskLists;
+        //    return View();
+        //}
+        //[HttpPost]
+        //public ActionResult TaskDetails(string Start,string Complete)
+        //{
+        //    DateTime sheduledStartTime;
+        //    int timeDifference;
+        //    string flightNumber = Session["flightNumber"].ToString();
+        //    if (string.IsNullOrEmpty(Start))
+        //    {
+        //        sheduledStartTime = bussines.GettingEndTime(flightNumber, Complete);
+        //        timeDifference = (DateTime.Now - sheduledStartTime).Minutes;
+        //        bussines.UpdateTaskEndStatus(flightNumber, Complete,"Completed", DateTime.Now,timeDifference);
+        //        return RedirectToAction("TaskDetails");
+        //    }
+        //    else
+        //    {
+        //        bussines.UpdateTaskStartStatus(flightNumber, Start, "In Progress", DateTime.Now);
+        //        return RedirectToAction("TaskDetails");
+        //    }
+        //}
         public ActionResult TaskDetailsTest()
         {
             Session["flightNumber"] = "1001";
             string flightNumber = Session["flightNumber"].ToString();
+            string staffName = Session["StaffName"].ToString();
+            string staffDepartment = Session["StaffDepartment"].ToString();
+            ViewBag.StaffName = staffName;
             FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
             ViewBag.FlightNumber = flightDetails.FlightNumber;
             ViewBag.Bay = flightDetails.Bay;
             ViewBag.CurrentStation = flightDetails.CurrentStation;
-            List<TaskLists> taskLists = bussines.GetTasksForParticularFlight(flightNumber);
+            List<TaskLists> taskLists = bussines.GetTasksForParticularFlight(flightNumber,staffName,staffDepartment);
             ViewBag.TaskLists = taskLists;
             return View();
         }
@@ -129,7 +138,7 @@ namespace OneTimeProgress.Controllers
             DateTime departmentStartTime;
             DateTime departmentEndTime;
             double departmentSheduledMinutes;
-            string _path = @"C:\Users\hpadmin\Desktop\Standard\TaskDetails.xlsx";
+            string _path = @"C:\Users\hpadmin\Desktop\Standard\AllTaskDetails.xlsx";
             FileStream stream = new FileStream(_path, FileMode.Open, FileAccess.Read);
             SqlConnection con = new SqlConnection("Server=HIB30BWAX2; Initial Catalog = OneTimeProgress; User ID = sa; Password = Passw0rd@12;");
             var reader = ExcelReaderFactory.CreateReader(stream);
@@ -141,7 +150,7 @@ namespace OneTimeProgress.Controllers
                 while (reader.Read())
                 {
                     
-                    SqlCommand cmd = new SqlCommand("InsertIntoTaskList @flightNumber,@taskDetail,@duration,@startTime,@endTime,@statusOfTask,@actualStartTime,@actualEndTime,@timeDifference", con);
+                    SqlCommand cmd = new SqlCommand("InsertIntoTaskList @flightNumber,@taskDetail,@duration,@startTime,@endTime,@statusOfTask,@actualStartTime,@actualEndTime,@timeDifference,@department,@staffName", con);
                     cmd.Parameters.AddWithValue("@flightNumber", reader.GetDouble(0));
                     cmd.Parameters.AddWithValue("@taskDetail", reader.GetString(1));
                     startTime = (flightdeparture.AddMinutes(-reader.GetDouble(2)));
@@ -153,6 +162,8 @@ namespace OneTimeProgress.Controllers
                     cmd.Parameters.AddWithValue("@actualStartTime", DateTime.Now);
                     cmd.Parameters.AddWithValue("@actualEndTime", DateTime.Now);
                     cmd.Parameters.AddWithValue("@timeDifference", 0);
+                    cmd.Parameters.AddWithValue("@department", reader.GetString(4));
+                    cmd.Parameters.AddWithValue("@staffName", reader.GetString(5));
                     j = cmd.ExecuteNonQuery();
                 }
                 con.Close();

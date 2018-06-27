@@ -10,6 +10,12 @@ namespace OneTimeProgress.BussinessEntity
         public string userName { get; set; }
         public string password { get; set; }
     }
+    public class ConfirmLoginModel
+    {
+        public string userName { get; set; }
+        public string userType { get; set; }
+        public string userDepartment { get; set; }
+    }
     public class FlightDetails
     {
         public string FlightNumber { get; set; }
@@ -50,17 +56,20 @@ namespace OneTimeProgress.BussinessEntity
         public string Status { get; set; }
         public string Colour { get; set; }// status completed then check the timedifference - duration if it is>1 make it red bar
         public double ProgressPercentage { get; set; }
+        public string StaffName { get; set; }
     }
     public class Departments
     {
-        public string DepatmentName { get; set; }
+        public string DepartmentName { get; set; }
         public string SupervisorName { get; set; }
         public string SheduledStartTime { get; set; }
         public string SheduledEndTime { get; set; }
-        public string SheduledDuration { get; set; }//sheduleend-shedulestart
+        public int SheduledDuration { get; set; }//sheduleend-shedulestart
         public string ActualStartTime { get; set; }
         public string ActualEndTime { get; set; }
-        public string ActualDuration { get; set; }//actualend-actualstart
+        public double ActualDuration { get; set; }//actualend-actualstart
         public string StatusofDepatment { get; set; }
+        public string Colour { get; set; }//progress bar color in case progress
+        public double ProgressPercentage { get; set; }
     }
 }

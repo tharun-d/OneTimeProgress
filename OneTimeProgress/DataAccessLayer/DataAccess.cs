@@ -17,11 +17,12 @@ namespace OneTimeProgress.DataAccessLayer
         {
             return CommonThings.GetConnectionString();
         }
-        public string LoginValidator(LoginModel loginModel)
+        public ConfirmLoginModel LoginValidator(LoginModel loginModel)
         {
-            string result;
+           
             SqlCommand sda;
             SqlConnection con = new SqlConnection(GetConnectionString());
+            ConfirmLoginModel result = new ConfirmLoginModel();
             if (con.State != ConnectionState.Open)
             {
                 con.Open();
@@ -34,12 +35,12 @@ namespace OneTimeProgress.DataAccessLayer
 
             SqlDataReader dr = sda.ExecuteReader();
             if(dr.Read())
-            { 
-                result=Convert.ToString(dr[0]);
+            {
+                result.userName = Convert.ToString(dr[0]);
+                result.userType = Convert.ToString(dr[1]);
+                result.userDepartment = Convert.ToString(dr[2]);
                 con.Close();
-            }
-            else
-                result = "Not Found";
+            } 
             return result;
         }
         public List<FlightDetails> GetAllFlightDetails()
@@ -85,7 +86,7 @@ namespace OneTimeProgress.DataAccessLayer
             con.Close();
             return flightDetails;
         }
-        public List<TaskLists> GetTasksForParticularFlight(string flightNumber)
+        public List<TaskLists> GetTasksForParticularFlight(string flightNumber,string staffName,string staffDepartment)
         {
             List<TaskLists> taskLists = new List<TaskLists>();
             SqlCommand sda;
@@ -97,6 +98,10 @@ namespace OneTimeProgress.DataAccessLayer
             sda = new SqlCommand(commonThings.getTasksForParticularFlight, con);
             SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
             sda.Parameters.Add(p1);
+            SqlParameter p2 = new SqlParameter("@staffName", staffName);
+            sda.Parameters.Add(p2);
+            SqlParameter p3 = new SqlParameter("@staffDepartment", staffDepartment);
+            sda.Parameters.Add(p3);
             SqlDataReader dr = sda.ExecuteReader();
             while (dr.Read())
             {
@@ -170,7 +175,7 @@ namespace OneTimeProgress.DataAccessLayer
             endTime = (startTime.AddMinutes(Endminutes));
             return endTime;
         }
-        public List<ALLTaskLists> GetStatusOfAllTasks(string flightNumber)
+        public List<ALLTaskLists> GetStatusOfAllTasks(string flightNumber,string superVisorDepartment)
         {
             List<ALLTaskLists> taskLists = new List<ALLTaskLists>();
             SqlCommand sda;
@@ -179,9 +184,11 @@ namespace OneTimeProgress.DataAccessLayer
             {
                 con.Open();
             }
-            sda = new SqlCommand(commonThings.getTasksForParticularFlight, con);
+            sda = new SqlCommand(commonThings.getTasksForParticularFlightDepartmentWise, con);
             SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
             sda.Parameters.Add(p1);
+            SqlParameter p2 = new SqlParameter("@superVisorDepartment", superVisorDepartment);
+            sda.Parameters.Add(p2);
             SqlDataReader dr = sda.ExecuteReader();
             while (dr.Read())
             {
@@ -195,7 +202,8 @@ namespace OneTimeProgress.DataAccessLayer
                     Status = Convert.ToString(dr[5]),
                     ActualStartTime = Convert.ToDateTime(dr[6]).ToString("HH:mm"),
                     ActualEndTime = Convert.ToDateTime(dr[7]).ToString("HH:mm"),
-                    TimeDifference = Convert.ToInt32(dr[8]),//actualtimedifference   
+                    TimeDifference = Convert.ToInt32(dr[8]),//actualtimedifference 
+                    StaffName=Convert.ToString(dr[9]),
                     Colour = ""
                 };
                 if (details.Status == "Yet To Start")
@@ -383,31 +391,44 @@ namespace OneTimeProgress.DataAccessLayer
             sda.Parameters.Add(p1);      
             SqlDataReader dr = sda.ExecuteReader();
 
-            if (dr.Read())
+            while(dr.Read())
             {
                 Departments departments = new Departments()
                 {
-                    DepatmentName=Convert.ToString(dr[0]),
-                    SupervisorName=Convert.ToString(dr[1]),
+                    DepartmentName = Convert.ToString(dr[0]),
+                    SupervisorName = Convert.ToString(dr[1]),
                     SheduledStartTime = Convert.ToDateTime(dr[2]).ToString("HH:mm"),
                     SheduledEndTime = Convert.ToDateTime(dr[3]).ToString("HH:mm"),
-                    ActualStartTime =Convert.ToDateTime(dr[4]).ToString("HH:mm"),
-                    ActualEndTime = Convert.ToDateTime(dr[5]).ToString("HH:mm"),
-                    StatusofDepatment=Convert.ToString(dr[6])
+                    SheduledDuration=Convert.ToInt16(dr[4]),
+                    ActualStartTime = Convert.ToDateTime(dr[5]).ToString("HH:mm"),
+                    ActualEndTime = Convert.ToDateTime(dr[6]).ToString("HH:mm"),
+                    StatusofDepatment=Convert.ToString(dr[7])
                 };
-                departments.SheduledDuration = (Convert.ToDateTime(dr[3]) - Convert.ToDateTime(dr[2])).ToString("HH:mm");
                 if(departments.StatusofDepatment=="Completed")
                 {
-                    departments.ActualDuration = (Convert.ToDateTime(dr[5]) - Convert.ToDateTime(dr[4])).ToString("HH:mm");
+                    departments.ActualDuration = (Convert.ToDateTime(dr[5]) - Convert.ToDateTime(dr[4])).TotalMinutes;
                 }
                 if (departments.StatusofDepatment == "In Progress")
                 {
-                    
+                    double totalDuration = (Convert.ToDateTime(dr[3]) - Convert.ToDateTime(dr[2])).TotalMinutes;
+                    double currrentDuration = DateTime.Now.Subtract((Convert.ToDateTime(dr[4]))).TotalMinutes;
+                    departments.Colour = "yellow";//warning bar
+                    departments.ProgressPercentage = ProgressCaluclatorForDepartment(currrentDuration, totalDuration);
                 }
                 listOfDepartments.Add(departments);
             }
             con.Close();
             return listOfDepartments;
+        }
+        public double ProgressCaluclatorForDepartment(double currentDuration,double totalDuration)
+        {
+            double percentage;
+            percentage = (currentDuration / totalDuration) * 100;
+            if (percentage > 100)
+            {
+                return 100;
+            }
+            return percentage;
         }
     }
 }

@@ -25,29 +25,36 @@ namespace OneTimeProgress.Controllers
         [HttpPost]
         public ActionResult FlightsPage(string flightNumber)
         {
+            string superVisorName = Session["SuperVisorName"].ToString();
+            ViewBag.SuperVisorName = superVisorName;
             Session["SflightNumber"] = flightNumber;
             return RedirectToAction("ALLTaskDetailsTest");
         }
-        public ActionResult ALLTaskDetails()
-        {
-            string flightNumber = Session["SflightNumber"].ToString();
-            FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
-            ViewBag.FlightNumber = flightDetails.FlightNumber;
-            ViewBag.DepartureTime = "17:00";
-            ViewBag.CurrentStation = flightDetails.CurrentStation;
-            List<ALLTaskLists> taskLists = bussines.GetStatusOfAllTasks(flightNumber);
-            ViewBag.TaskLists = taskLists;
-            return View();
-        }
+        //public ActionResult ALLTaskDetails()
+        //{
+        //    string superVisorName = Session["SuperVisorName"].ToString();
+        //    string superVisorDepartment=Session["SuperVisorDepartment"].ToString();
+        //    string flightNumber = Session["SflightNumber"].ToString();
+        //    FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
+        //    ViewBag.FlightNumber = flightDetails.FlightNumber;
+        //    ViewBag.DepartureTime = "17:00";
+        //    ViewBag.CurrentStation = flightDetails.CurrentStation;
+        //    List<ALLTaskLists> taskLists = bussines.GetStatusOfAllTasks(flightNumber,superVisorDepartment);
+        //    ViewBag.TaskLists = taskLists;
+        //    return View();
+        //}
         public ActionResult ALLTaskDetailsTest()
         {
+            string superVisorName = Session["SuperVisorName"].ToString();
+            ViewBag.SuperVisorName = superVisorName;
+            string superVisorDepartment = Session["SuperVisorDepartment"].ToString();
             string flightNumber = Session["SflightNumber"].ToString();
             FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
             ViewBag.FlightNumber = flightDetails.FlightNumber;
             ViewBag.DepartureTime = "17:00";
             ViewBag.Department = "Ramp";
             ViewBag.CurrentStation = flightDetails.CurrentStation;
-            List<ALLTaskLists> taskLists = bussines.GetStatusOfAllTasks(flightNumber);
+            List<ALLTaskLists> taskLists = bussines.GetStatusOfAllTasks(flightNumber,superVisorDepartment);
             ViewBag.TaskLists = taskLists;
             return View();
         }

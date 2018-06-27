@@ -18,7 +18,7 @@
         return i;
     }
 </script>
-<span>Welcome Ajay</span><br /><br />
+<span>Welcome @ViewBag.SuperVisorName</span><br /><br />
 <form method="post">
     <table class="table table-bordered">
         <thead>
@@ -42,7 +42,7 @@
                 <tr>
                     <td align="center" width="25%" rowspan="2">
                         <p>@item.Task</p>
-                       <p>Tharun</p>
+                       <p>@item.StaffName</p>
                     </td>
                     <td>
                         <div>
