@@ -3,7 +3,8 @@
     ViewBag.Title = "FlightsPage";
 }
 <span>Welcome @ViewBag.SuperVisorName</span><br />
-<span>Current Station : MAA</span>
+<span>Current Station : MAA</span><br />
+<span>Dept - @ViewBag.Department</span>
 <br /><br />
 <form method="post">
     <table class="table table-bordered">
@@ -27,7 +28,7 @@
                         <td>@item.FlightModel</td>
                         <td>@item.Departure</td>
                         <td>@item.Status</td>
-                        <td><button type="submit" name="flightNumber" class="btn btn-primary" value=@item.FlightNumber>Details Of Tasks</button></td>
+                        <td><button type="submit" name="flightNumber" class="btn btn-primary" value=@item.FlightNumber>View</button></td>
                     </tr>
                 }
                 else if (item.Status == "In Progress")
@@ -37,7 +38,7 @@
                         <td>@item.FlightModel</td>
                         <td>@item.Departure</td>
                         <td>@item.Status</td>
-                        <td><button type="submit" name="flightNumber" class="btn btn-primary" value=@item.FlightNumber>Details Of Tasks</button></td>
+                        <td><button type="submit" name="flightNumber" class="btn btn-primary" value=@item.FlightNumber>View</button></td>
                     </tr>
                 }
                 else
@@ -47,7 +48,7 @@
                         <td>@item.FlightModel</td>
                         <td>@item.Departure</td>
                         <td>@item.Status</td>
-                        <td><button type="submit" name="flightNumber" class="btn btn-primary" value=@item.FlightNumber>Details Of Tasks</button></td>
+                        <td><button type="submit" name="flightNumber" class="btn btn-primary" value=@item.FlightNumber>View</button></td>
                     </tr>
                 }
 

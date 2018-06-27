@@ -27,6 +27,8 @@ namespace OneTimeProgress.Controllers
         {
             string superVisorName = Session["SuperVisorName"].ToString();
             ViewBag.SuperVisorName = superVisorName;
+            string superVisorDepartment = Session["SuperVisorDepartment"].ToString();
+            ViewBag.Department = superVisorDepartment;
             Session["SflightNumber"] = flightNumber;
             return RedirectToAction("ALLTaskDetailsTest");
         }
@@ -48,6 +50,7 @@ namespace OneTimeProgress.Controllers
             string superVisorName = Session["SuperVisorName"].ToString();
             ViewBag.SuperVisorName = superVisorName;
             string superVisorDepartment = Session["SuperVisorDepartment"].ToString();
+            ViewBag.Department = superVisorDepartment;
             string flightNumber = Session["SflightNumber"].ToString();
             FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
             ViewBag.FlightNumber = flightDetails.FlightNumber;
