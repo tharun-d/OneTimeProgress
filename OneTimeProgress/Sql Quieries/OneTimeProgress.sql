@@ -199,7 +199,7 @@ select * from tasklist
 delete from tasklist
 update tasklist
 set timeDifference = 30
-where taskDetail='CARGO REPORTING' and flightNumber='1001'
+where taskDetail='CABIN APPEARANCE' and flightNumber='1001'
 ----------------------------------------------------------------------
 create table Departments
 (

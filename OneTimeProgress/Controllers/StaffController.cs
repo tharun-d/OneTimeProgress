@@ -43,8 +43,8 @@ namespace OneTimeProgress.Controllers
             }
             else if (confirmLoginModels.userType == "Manager")
             {
-                Session["Manager"] = confirmLoginModels.userName;
-                return RedirectToAction("DepartmentStatus", "Manager");
+                Session["ManagerName"] = confirmLoginModels.userName;
+                return RedirectToAction("FlightsPage", "Manager");
             }
             else
             {
@@ -103,6 +103,7 @@ namespace OneTimeProgress.Controllers
             string staffName = Session["StaffName"].ToString();
             string staffDepartment = Session["StaffDepartment"].ToString();
             ViewBag.StaffName = staffName;
+            ViewBag.staffDepartment = staffDepartment;
             FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
             ViewBag.FlightNumber = flightDetails.FlightNumber;
             ViewBag.Bay = flightDetails.Bay;

@@ -216,6 +216,7 @@
     <Content Include="Views\Staff\TaskDetailsTest.cshtml" />
     <Content Include="Views\SuperVisor\ALLTaskDetailsTest.cshtml" />
     <Content Include="Views\Manager\DepartmentStatus.cshtml" />
+    <Content Include="Views\Manager\FlightsPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
