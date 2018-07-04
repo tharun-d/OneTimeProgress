@@ -54,8 +54,7 @@ namespace OneTimeProgress.Controllers
             string flightNumber = Session["SflightNumber"].ToString();
             FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
             ViewBag.FlightNumber = flightDetails.FlightNumber;
-            ViewBag.DepartureTime = "17:00";
-            ViewBag.Department = "Ramp";
+            ViewBag.DepartureTime = flightDetails.Departure;
             ViewBag.CurrentStation = flightDetails.CurrentStation;
             List<ALLTaskLists> taskLists = bussines.GetStatusOfAllTasks(flightNumber,superVisorDepartment);
             ViewBag.TaskLists = taskLists;

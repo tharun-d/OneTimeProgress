@@ -98,9 +98,14 @@ namespace OneTimeProgress.Controllers
         //}
         public ActionResult TaskDetailsTest()
         {
-            Session["flightNumber"] = "1001";
-            string flightNumber = Session["flightNumber"].ToString();
             string staffName = Session["StaffName"].ToString();
+            if (staffName== "RAMST2")
+            {
+                Session["flightNumber"] = "343";
+            }
+            else
+                Session["flightNumber"] = "121";
+            string flightNumber = Session["flightNumber"].ToString();           
             string staffDepartment = Session["StaffDepartment"].ToString();
             ViewBag.StaffName = staffName;
             ViewBag.staffDepartment = staffDepartment;
@@ -108,6 +113,7 @@ namespace OneTimeProgress.Controllers
             ViewBag.FlightNumber = flightDetails.FlightNumber;
             ViewBag.Bay = flightDetails.Bay;
             ViewBag.CurrentStation = flightDetails.CurrentStation;
+            ViewBag.Departure = flightDetails.Departure;
             List<TaskLists> taskLists = bussines.GetTasksForParticularFlight(flightNumber,staffName,staffDepartment);
             ViewBag.TaskLists = taskLists;
             return View();
@@ -244,12 +250,14 @@ namespace OneTimeProgress.Controllers
         public string FinalInsert()
         {
             DateTime flightdeparture = (DateTime.Now.AddHours(2));
-            DateTime startTime, endTime;
-            string sd, ed;
+            DateTime startTime, endTime,aStartTime,aEndTime;
+            string sd, ed,asd,aed;
             sd = DateTime.Now.ToString("MM/dd/yyyy");
             ed = DateTime.Now.ToString("MM/dd/yyyy");
-            string st, et;
-            string start, end;
+            asd = DateTime.Now.ToString("MM/dd/yyyy");
+            aed = DateTime.Now.ToString("MM/dd/yyyy");
+            string st, et,ast,aet;
+            string start, end,aStart,aEnd;
             string _path = @"C:\Users\hpadmin\Desktop\Standard\modified.xlsx";
             FileStream stream = new FileStream(_path, FileMode.Open, FileAccess.Read);
             SqlConnection con = new SqlConnection("Server=HIB30BWAX2; Initial Catalog = OneTimeProgress; User ID = sa; Password = Passw0rd@12;");
@@ -274,8 +282,14 @@ namespace OneTimeProgress.Controllers
                     endTime = Convert.ToDateTime(end);
                     cmd.Parameters.AddWithValue("@endTime", endTime);
                     cmd.Parameters.AddWithValue("@statusOfTask", reader.GetString(5));
-                    cmd.Parameters.AddWithValue("@actualStartTime", reader.GetDateTime(6));
-                    cmd.Parameters.AddWithValue("@actualEndTime", reader.GetDateTime(7));
+                    ast = reader.GetDateTime(6).ToString("hh:mm");
+                    aStart = asd + " " + ast;
+                    aStartTime = Convert.ToDateTime(aStart);
+                    cmd.Parameters.AddWithValue("@actualStartTime", aStartTime);
+                    aet = reader.GetDateTime(7).ToString("hh:mm");
+                    aEnd = aed + " " + aet;
+                    aEndTime = Convert.ToDateTime(end);
+                    cmd.Parameters.AddWithValue("@actualEndTime",aEndTime);
                     cmd.Parameters.AddWithValue("@timeDifference", reader.GetDouble(8));
                     cmd.Parameters.AddWithValue("@department", reader.GetString(9));
                     cmd.Parameters.AddWithValue("@staffName", reader.GetString(10));

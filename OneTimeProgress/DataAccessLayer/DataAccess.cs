@@ -66,12 +66,12 @@ namespace OneTimeProgress.DataAccessLayer
                     TaskStartTime = Convert.ToDateTime(dr[4]).ToString("hh:mm"),
                     Departure = Convert.ToDateTime(dr[5]).ToString("hh:mm")
                 };
-                if (flightDetail.FlightNumber == "1000")
+                if (flightDetail.FlightNumber == "101")
                 {
                     flightDetail.Status = "Departed - On time";
                     flightDetail.Colour = "green";
                 }
-                else if (flightDetail.FlightNumber == "1001")
+                else if (flightDetail.FlightNumber == "121" || flightDetail.FlightNumber == "343")
                 {
                     flightDetail.Status = "In Progress";
                     flightDetail.Colour = "yellow";
@@ -128,7 +128,7 @@ namespace OneTimeProgress.DataAccessLayer
                 {
                     details.TimeDifference = 0;
                     details.ActualEndTime = "-";
-                    details.CurrentTimeMinusActualStartTime = DateTime.Now.Subtract(Convert.ToDateTime(dr[6])).TotalMinutes;
+                    details.CurrentTimeMinusActualStartTime = Math.Round(DateTime.Now.Subtract(Convert.ToDateTime(dr[6])).TotalMinutes);
                     details.ProgressPercentage = ProgressCaluclator(details.CurrentTimeMinusActualStartTime, details.Duration);
                     if(details.ProgressPercentage==100)
                     {
@@ -159,7 +159,7 @@ namespace OneTimeProgress.DataAccessLayer
             {
                 return 100;
             }
-            return percentage;
+            return Math.Round(percentage);
         }
         public DateTime GetIdealStartTimeForTask(int minutes)
         {
@@ -216,7 +216,7 @@ namespace OneTimeProgress.DataAccessLayer
                 {
                     details.TimeDifference = 0;
                     details.ActualEndTime = "-";
-                    details.CurrentTimeMinusActualStartTime = DateTime.Now.Subtract(Convert.ToDateTime(dr[6])).TotalMinutes;
+                    details.CurrentTimeMinusActualStartTime = Math.Round(DateTime.Now.Subtract(Convert.ToDateTime(dr[6])).TotalMinutes);
                     details.ProgressPercentage = ProgressCaluclator(details.CurrentTimeMinusActualStartTime, details.Duration);
                     if (details.ProgressPercentage == 100)
                     {
@@ -258,8 +258,8 @@ namespace OneTimeProgress.DataAccessLayer
                 flightDetails.FlightModel = Convert.ToString(dr[1]);
                 flightDetails.CurrentStation = Convert.ToString(dr[2]);
                 flightDetails.Bay = Convert.ToInt32(dr[3]);
-                flightDetails.TaskStartTime = Convert.ToString(dr[4]);
-                flightDetails.Departure = Convert.ToString(dr[5]);
+                flightDetails.TaskStartTime = Convert.ToDateTime(dr[4]).ToString("hh:mm");
+                flightDetails.Departure = Convert.ToDateTime(dr[5]).ToString("hh:mm");
             }
             con.Close();
             return flightDetails;
@@ -410,8 +410,8 @@ namespace OneTimeProgress.DataAccessLayer
                 }
                 if (departments.StatusofDepatment == "In Progress")
                 {
-                    double totalDuration = (Convert.ToDateTime(dr[3]) - Convert.ToDateTime(dr[2])).TotalMinutes;
-                    double currrentDuration = DateTime.Now.Subtract((Convert.ToDateTime(dr[4]))).TotalMinutes;
+                    double totalDuration = Math.Round((Convert.ToDateTime(dr[3]) - Convert.ToDateTime(dr[2])).TotalMinutes);
+                    double currrentDuration = Math.Round(DateTime.Now.Subtract((Convert.ToDateTime(dr[4]))).TotalMinutes);
                     departments.Colour = "yellow";//warning bar
                     departments.ProgressPercentage = ProgressCaluclatorForDepartment(currrentDuration, totalDuration);
                 }
@@ -428,7 +428,7 @@ namespace OneTimeProgress.DataAccessLayer
             {
                 return 100;
             }
-            return percentage;
+            return Math.Round(percentage);
         }
     }
 }
