@@ -1,7 +1,7 @@
 create database OneTimeProgress
 go
 create table LoginDetails(
-Email varchar(max),
+email varchar(max),
 secretPassword varchar(max),
 userName varchar(max),
 userType varchar(max),
@@ -11,7 +11,21 @@ go
 ------------------
 drop table LoginDetails
 delete from LoginDetails
+select * from logindetails
 ---------------------
+create procedure InsertIntoLoginDetails
+(
+@email varchar(max),
+@secretPassword varchar(max),
+@userName varchar(max),
+@userType varchar(max),
+@UserDepartment varchar(max)
+)
+as
+begin
+insert into LoginDetails values(@email,@secretPassword,@userName,@userType,@UserDepartment)
+end
+-----------------------
 insert into LoginDetails values('tharun@gmail.com','tharun','Tharun','Staff','Ramp')
 insert into LoginDetails values('Athanu@gmail.com','athanu','Athanu','Staff','Gate')
 insert into LoginDetails values('ajay@gmail.com','ajay','Ajay','Super Visor','Ramp')
@@ -33,12 +47,12 @@ go
 create table AllFlightDetails
 (
 equipmentName varchar(max),
-flightNumber int,
+flightNumber varchar(max),
 airCraftModel varchar(max),
 currentStation varchar(max),
 bayNumber int,
-taskStartTime varchar(max),
-departure varchar(max),
+taskStartTime datetime,
+departure dateTime
 )
 ---------------------------------------------
 drop table AllFlightDetails
@@ -50,12 +64,17 @@ insert into AllFlightDetails values('Flight2',1002,'Airbus A320-100/200','MAA',5
 insert into AllFlightDetails values('Flight3',1003,'Airbus A340-600','MAA',4,'14:00','15:30')
 insert into AllFlightDetails values('Flight4',1004,'Airbus A320-100/200','MAA',8,'16:00','17:00')
 ---------------------------
+create procedure InsertIntoAllFlightDetails(@equipmentName varchar(max),@flightNumber varchar(max),@airCraftModel varchar(max),@currentStation varchar(max),@bayNumber int,@taskStartTime datetime,@departureTime datetime)as
+begin
+insert into AllFlightDetails values(@equipmentName,@flightNumber,@airCraftModel,@currentStation,@bayNumber,@taskStartTime,@departureTime)
+end
+---------------------------
+select * from AllFlightDetails
 delete from AllFlightDetails
 go
 alter procedure GetAllFlightsDetails as
 begin
 select flightNumber,airCraftModel,currentStation,bayNumber,taskStartTime,departure from AllFlightDetails
-ORDER BY departure
 end
 --------------------------------
 go
@@ -195,8 +214,6 @@ UpdateTaskEndTime '1001','6','ggg','sd'
 select taskdetail,duration,startTime,endTime,actualStartTime,actualEndTime,DateDiff(MINUTE,actualEndTime,actualStartTime) 
 as diff from tasklist
 ---------------------------------------------------------------------------------
-select * from tasklist
-delete from tasklist
 update tasklist
 set timeDifference = 30
 where taskDetail='CABIN APPEARANCE' and flightNumber='1001'
@@ -253,3 +270,9 @@ select departmentName,superVisorName,sheduledStartTime,sheduledEndTime,sheduledD
 where flightNumber=@flightNumber
 end
 ----------------------
+select * from tasklist
+delete from tasklist
+select * from AllFlightDetails
+delete from AllFlightDetails
+select * from LoginDetails
+delete from LoginDetails

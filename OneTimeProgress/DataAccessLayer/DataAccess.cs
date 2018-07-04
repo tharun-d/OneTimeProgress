@@ -63,8 +63,8 @@ namespace OneTimeProgress.DataAccessLayer
                     FlightModel = Convert.ToString(dr[1]),
                     CurrentStation = Convert.ToString(dr[2]),
                     Bay = Convert.ToInt32(dr[3]),
-                    TaskStartTime = Convert.ToString(dr[4]),
-                    Departure = Convert.ToString(dr[5])
+                    TaskStartTime = Convert.ToDateTime(dr[4]).ToString("hh:mm"),
+                    Departure = Convert.ToDateTime(dr[5]).ToString("hh:mm")
                 };
                 if (flightDetail.FlightNumber == "1000")
                 {
