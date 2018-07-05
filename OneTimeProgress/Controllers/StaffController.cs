@@ -17,17 +17,10 @@ namespace OneTimeProgress.Controllers
         // GET: Staff
 
         Bussines bussines = new Bussines();
-        PostgressDataAccess PostgressDataAccess = new PostgressDataAccess();
-        public ActionResult Index()
-        {
-           // PostgressDataAccess.Test();
-            return View();
-        }
         public ActionResult Login()
         {
             return View();
         }
-
         [HttpPost]
         public ActionResult Login(LoginModel loginModel)
         {
@@ -57,18 +50,18 @@ namespace OneTimeProgress.Controllers
             
         }
 
-        public ActionResult FlightsPage()
-        {
-            List<FlightDetails> flightDetails = bussines.GetAllFlightDetails();
-            ViewBag.FlightDetails = flightDetails;
-            return View();
-        }
-        [HttpPost]
-        public ActionResult FlightsPage(string flightNumber)
-        {
-            Session["flightNumber"] = flightNumber;
-            return RedirectToAction("TaskDetailsTest");
-        }
+        //public ActionResult FlightsPage()
+        //{
+        //    List<FlightDetails> flightDetails = bussines.GetAllFlightDetails();
+        //    ViewBag.FlightDetails = flightDetails;
+        //    return View();
+        //}
+        //[HttpPost]
+        //public ActionResult FlightsPage(string flightNumber)
+        //{
+        //    Session["flightNumber"] = flightNumber;
+        //    return RedirectToAction("TaskDetailsTest");
+        //}
         //public ActionResult TaskDetails()
         //{
         //    string flightNumber = Session["flightNumber"].ToString();
@@ -140,47 +133,47 @@ namespace OneTimeProgress.Controllers
                 return RedirectToAction("TaskDetailsTest");
             }
         }
-        public ActionResult TaskDetailsModified()
-        {
-            string staffName = Session["StaffName"].ToString();
-            if (staffName == "RAMST2")
-            {
-                Session["flightNumber"] = "343";
-            }
-            else
-                Session["flightNumber"] = "121";
-            string flightNumber = Session["flightNumber"].ToString();
-            string staffDepartment = Session["StaffDepartment"].ToString();
-            ViewBag.StaffName = staffName;
-            ViewBag.staffDepartment = staffDepartment;
-            FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
-            ViewBag.FlightNumber = flightDetails.FlightNumber;
-            ViewBag.Bay = flightDetails.Bay;
-            ViewBag.CurrentStation = flightDetails.CurrentStation;
-            ViewBag.Departure = flightDetails.Departure;
-            List<TaskLists> taskLists = bussines.GetTasksForParticularFlight(flightNumber, staffName, staffDepartment);
-            ViewBag.TaskLists = taskLists;
-            return View();
-        }
-        [HttpPost]
-        public ActionResult TaskDetailsModified(string Start, string Complete)
-        {
-            DateTime ActualStartTime;
-            double timeDifference;
-            string flightNumber = Session["flightNumber"].ToString();
-            if (string.IsNullOrEmpty(Start))
-            {
-                ActualStartTime = bussines.GettingActualStartTime(flightNumber, Complete);
-                timeDifference = (DateTime.Now.Subtract(ActualStartTime)).TotalMinutes;
-                bussines.UpdateTaskEndStatus(flightNumber, Complete, "Completed", DateTime.Now, timeDifference);
-                return RedirectToAction("TaskDetailsModified");
-            }
-            else
-            {
-                bussines.UpdateTaskStartStatus(flightNumber, Start, "In Progress", DateTime.Now);
-                return RedirectToAction("TaskDetailsModified");
-            }
-        }
+        //public ActionResult TaskDetailsModified()
+        //{
+        //    string staffName = Session["StaffName"].ToString();
+        //    if (staffName == "RAMST2")
+        //    {
+        //        Session["flightNumber"] = "343";
+        //    }
+        //    else
+        //        Session["flightNumber"] = "121";
+        //    string flightNumber = Session["flightNumber"].ToString();
+        //    string staffDepartment = Session["StaffDepartment"].ToString();
+        //    ViewBag.StaffName = staffName;
+        //    ViewBag.staffDepartment = staffDepartment;
+        //    FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
+        //    ViewBag.FlightNumber = flightDetails.FlightNumber;
+        //    ViewBag.Bay = flightDetails.Bay;
+        //    ViewBag.CurrentStation = flightDetails.CurrentStation;
+        //    ViewBag.Departure = flightDetails.Departure;
+        //    List<TaskLists> taskLists = bussines.GetTasksForParticularFlight(flightNumber, staffName, staffDepartment);
+        //    ViewBag.TaskLists = taskLists;
+        //    return View();
+        //}
+        //[HttpPost]
+        //public ActionResult TaskDetailsModified(string Start, string Complete)
+        //{
+        //    DateTime ActualStartTime;
+        //    double timeDifference;
+        //    string flightNumber = Session["flightNumber"].ToString();
+        //    if (string.IsNullOrEmpty(Start))
+        //    {
+        //        ActualStartTime = bussines.GettingActualStartTime(flightNumber, Complete);
+        //        timeDifference = (DateTime.Now.Subtract(ActualStartTime)).TotalMinutes;
+        //        bussines.UpdateTaskEndStatus(flightNumber, Complete, "Completed", DateTime.Now, timeDifference);
+        //        return RedirectToAction("TaskDetailsModified");
+        //    }
+        //    else
+        //    {
+        //        bussines.UpdateTaskStartStatus(flightNumber, Start, "In Progress", DateTime.Now);
+        //        return RedirectToAction("TaskDetailsModified");
+        //    }
+        //}
 
         //public string InsertTasksandDepartMents()
         //{
@@ -292,109 +285,109 @@ namespace OneTimeProgress.Controllers
 
         //    return "Inserted into Task List and Department Table";
         //}
-        public string FinalInsert()
-        {
-            DateTime flightdeparture = (DateTime.Now.AddHours(2));
-            DateTime startTime, endTime,aStartTime,aEndTime;
-            string sd, ed,asd,aed;
-            sd = DateTime.Now.ToString("MM/dd/yyyy");
-            ed = DateTime.Now.ToString("MM/dd/yyyy");
-            asd = DateTime.Now.ToString("MM/dd/yyyy");
-            aed = DateTime.Now.ToString("MM/dd/yyyy");
-            string st, et,ast,aet;
-            string start, end,aStart,aEnd;
-            string _path = @"C:\Users\hpadmin\Desktop\Standard\modified.xlsx";
-            FileStream stream = new FileStream(_path, FileMode.Open, FileAccess.Read);
-            SqlConnection con = new SqlConnection("Server=HIB30BWAX2; Initial Catalog = OneTimeProgress; User ID = sa; Password = Passw0rd@12;");
-            var reader = ExcelReaderFactory.CreateReader(stream);
-            if (reader.Name=="Tasks")//Tasks Page
-            {
-                int j;
-                reader.Read();
-                con.Open();
-                while (reader.Read())
-                {
-                    SqlCommand cmd = new SqlCommand("InsertIntoTaskList @flightNumber,@taskDetail,@duration,@startTime,@endTime,@statusOfTask,@actualStartTime,@actualEndTime,@timeDifference,@department,@staffName", con);
-                    cmd.Parameters.AddWithValue("@flightNumber", reader.GetDouble(0));
-                    cmd.Parameters.AddWithValue("@taskDetail", reader.GetString(1));
-                    cmd.Parameters.AddWithValue("@duration", reader.GetDouble(2));
-                    st = reader.GetDateTime(3).ToString("hh:mm");
-                    start = sd + " " + st;
-                    startTime = Convert.ToDateTime(start);
-                    cmd.Parameters.AddWithValue("@startTime", startTime);
-                    et = reader.GetDateTime(4).ToString("hh:mm");
-                    end = ed + " " + et;
-                    endTime = Convert.ToDateTime(end);
-                    cmd.Parameters.AddWithValue("@endTime", endTime);
-                    cmd.Parameters.AddWithValue("@statusOfTask", reader.GetString(5));
-                    ast = reader.GetDateTime(6).ToString("hh:mm");
-                    aStart = asd + " " + ast;
-                    aStartTime = Convert.ToDateTime(aStart);
-                    cmd.Parameters.AddWithValue("@actualStartTime", aStartTime);
-                    aet = reader.GetDateTime(7).ToString("hh:mm");
-                    aEnd = aed + " " + aet;
-                    aEndTime = Convert.ToDateTime(end);
-                    cmd.Parameters.AddWithValue("@actualEndTime",aEndTime);
-                    cmd.Parameters.AddWithValue("@timeDifference", reader.GetDouble(8));
-                    cmd.Parameters.AddWithValue("@department", reader.GetString(9));
-                    cmd.Parameters.AddWithValue("@staffName", reader.GetString(10));
-                    j = cmd.ExecuteNonQuery();
-                }
-                con.Close();
-            }
-            reader.NextResult();
-            if (reader.Name=="Flights")//Flights sheet
-            {
-                DateTime taskStartTime, departureTime;
-                string ts, dt;
-                ts = DateTime.Now.ToString("MM/dd/yyyy");
-                dt = DateTime.Now.ToString("MM/dd/yyyy");
-                string tst, tdt;
-                string tstartTime, tdepTime;
-                int j;
-                reader.Read();
-                con.Open();
-                while (reader.Read())
-                {
+        //public string FinalInsert()
+        //{
+        //    DateTime flightdeparture = (DateTime.Now.AddHours(2));
+        //    DateTime startTime, endTime,aStartTime,aEndTime;
+        //    string sd, ed,asd,aed;
+        //    sd = DateTime.Now.ToString("MM/dd/yyyy");
+        //    ed = DateTime.Now.ToString("MM/dd/yyyy");
+        //    asd = DateTime.Now.ToString("MM/dd/yyyy");
+        //    aed = DateTime.Now.ToString("MM/dd/yyyy");
+        //    string st, et,ast,aet;
+        //    string start, end,aStart,aEnd;
+        //    string _path = @"C:\Users\hpadmin\Desktop\Standard\modified.xlsx";
+        //    FileStream stream = new FileStream(_path, FileMode.Open, FileAccess.Read);
+        //    SqlConnection con = new SqlConnection("Server=HIB30BWAX2; Initial Catalog = OneTimeProgress; User ID = sa; Password = Passw0rd@12;");
+        //    var reader = ExcelReaderFactory.CreateReader(stream);
+        //    if (reader.Name=="Tasks")//Tasks Page
+        //    {
+        //        int j;
+        //        reader.Read();
+        //        con.Open();
+        //        while (reader.Read())
+        //        {
+        //            SqlCommand cmd = new SqlCommand("InsertIntoTaskList @flightNumber,@taskDetail,@duration,@startTime,@endTime,@statusOfTask,@actualStartTime,@actualEndTime,@timeDifference,@department,@staffName", con);
+        //            cmd.Parameters.AddWithValue("@flightNumber", reader.GetDouble(0));
+        //            cmd.Parameters.AddWithValue("@taskDetail", reader.GetString(1));
+        //            cmd.Parameters.AddWithValue("@duration", reader.GetDouble(2));
+        //            st = reader.GetDateTime(3).ToString("hh:mm");
+        //            start = sd + " " + st;
+        //            startTime = Convert.ToDateTime(start);
+        //            cmd.Parameters.AddWithValue("@startTime", startTime);
+        //            et = reader.GetDateTime(4).ToString("hh:mm");
+        //            end = ed + " " + et;
+        //            endTime = Convert.ToDateTime(end);
+        //            cmd.Parameters.AddWithValue("@endTime", endTime);
+        //            cmd.Parameters.AddWithValue("@statusOfTask", reader.GetString(5));
+        //            ast = reader.GetDateTime(6).ToString("hh:mm");
+        //            aStart = asd + " " + ast;
+        //            aStartTime = Convert.ToDateTime(aStart);
+        //            cmd.Parameters.AddWithValue("@actualStartTime", aStartTime);
+        //            aet = reader.GetDateTime(7).ToString("hh:mm");
+        //            aEnd = aed + " " + aet;
+        //            aEndTime = Convert.ToDateTime(end);
+        //            cmd.Parameters.AddWithValue("@actualEndTime",aEndTime);
+        //            cmd.Parameters.AddWithValue("@timeDifference", reader.GetDouble(8));
+        //            cmd.Parameters.AddWithValue("@department", reader.GetString(9));
+        //            cmd.Parameters.AddWithValue("@staffName", reader.GetString(10));
+        //            j = cmd.ExecuteNonQuery();
+        //        }
+        //        con.Close();
+        //    }
+        //    reader.NextResult();
+        //    if (reader.Name=="Flights")//Flights sheet
+        //    {
+        //        DateTime taskStartTime, departureTime;
+        //        string ts, dt;
+        //        ts = DateTime.Now.ToString("MM/dd/yyyy");
+        //        dt = DateTime.Now.ToString("MM/dd/yyyy");
+        //        string tst, tdt;
+        //        string tstartTime, tdepTime;
+        //        int j;
+        //        reader.Read();
+        //        con.Open();
+        //        while (reader.Read())
+        //        {
                     
-                    SqlCommand cmd = new SqlCommand("InsertIntoAllFlightDetails @equipmentName,@flightNumber,@airCraftModel,@currentStation,@bayNumber,@taskStartTime,@departureTime", con);
-                    cmd.Parameters.AddWithValue("@equipmentName", reader.GetString(0));
-                    cmd.Parameters.AddWithValue("@flightNumber", reader.GetDouble(1));
-                    cmd.Parameters.AddWithValue("@airCraftModel", reader.GetString(2));
-                    cmd.Parameters.AddWithValue("@currentStation", reader.GetString(3));
-                    cmd.Parameters.AddWithValue("@bayNumber", reader.GetDouble(4));
-                    tst = reader.GetDateTime(5).ToString("hh:mm");
-                    tstartTime = ts + " " + tst;
-                    taskStartTime = Convert.ToDateTime(tstartTime);
-                    cmd.Parameters.AddWithValue("@taskStartTime", taskStartTime);
-                    tdt = reader.GetDateTime(6).ToString("hh:mm");
-                    tdepTime = dt + " " + tdt;
-                    departureTime = Convert.ToDateTime(tdepTime);
-                    cmd.Parameters.AddWithValue("@departureTime", departureTime);
-                    j = cmd.ExecuteNonQuery();
-                }
-                con.Close();
-            }
-            reader.NextResult();
-            if (reader.Name == "Employees")//Employees sheet
-            { 
-                int j;
-                reader.Read();
-                con.Open();
-                while (reader.Read())
-                {
-                    SqlCommand cmd = new SqlCommand("InsertIntoLoginDetails @email,@secretPassword,@userName,@userType,@UserDepartment", con);
-                    cmd.Parameters.AddWithValue("@email", reader.GetString(0));
-                    cmd.Parameters.AddWithValue("@secretPassword", reader.GetString(1));
-                    cmd.Parameters.AddWithValue("@userName", reader.GetString(2));
-                    cmd.Parameters.AddWithValue("@userType", reader.GetString(3));
-                    cmd.Parameters.AddWithValue("@UserDepartment", reader.GetString(4));
+        //            SqlCommand cmd = new SqlCommand("InsertIntoAllFlightDetails @equipmentName,@flightNumber,@airCraftModel,@currentStation,@bayNumber,@taskStartTime,@departureTime", con);
+        //            cmd.Parameters.AddWithValue("@equipmentName", reader.GetString(0));
+        //            cmd.Parameters.AddWithValue("@flightNumber", reader.GetDouble(1));
+        //            cmd.Parameters.AddWithValue("@airCraftModel", reader.GetString(2));
+        //            cmd.Parameters.AddWithValue("@currentStation", reader.GetString(3));
+        //            cmd.Parameters.AddWithValue("@bayNumber", reader.GetDouble(4));
+        //            tst = reader.GetDateTime(5).ToString("hh:mm");
+        //            tstartTime = ts + " " + tst;
+        //            taskStartTime = Convert.ToDateTime(tstartTime);
+        //            cmd.Parameters.AddWithValue("@taskStartTime", taskStartTime);
+        //            tdt = reader.GetDateTime(6).ToString("hh:mm");
+        //            tdepTime = dt + " " + tdt;
+        //            departureTime = Convert.ToDateTime(tdepTime);
+        //            cmd.Parameters.AddWithValue("@departureTime", departureTime);
+        //            j = cmd.ExecuteNonQuery();
+        //        }
+        //        con.Close();
+        //    }
+        //    reader.NextResult();
+        //    if (reader.Name == "Employees")//Employees sheet
+        //    { 
+        //        int j;
+        //        reader.Read();
+        //        con.Open();
+        //        while (reader.Read())
+        //        {
+        //            SqlCommand cmd = new SqlCommand("InsertIntoLoginDetails @email,@secretPassword,@userName,@userType,@UserDepartment", con);
+        //            cmd.Parameters.AddWithValue("@email", reader.GetString(0));
+        //            cmd.Parameters.AddWithValue("@secretPassword", reader.GetString(1));
+        //            cmd.Parameters.AddWithValue("@userName", reader.GetString(2));
+        //            cmd.Parameters.AddWithValue("@userType", reader.GetString(3));
+        //            cmd.Parameters.AddWithValue("@UserDepartment", reader.GetString(4));
                   
-                    j = cmd.ExecuteNonQuery();
-                }
-                con.Close();
-            }
-            return "Inserted";
-        }
+        //            j = cmd.ExecuteNonQuery();
+        //        }
+        //        con.Close();
+        //    }
+        //    return "Inserted";
+        //}
     }
 }

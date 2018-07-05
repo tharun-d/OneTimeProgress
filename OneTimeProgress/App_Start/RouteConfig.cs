@@ -16,7 +16,7 @@ namespace OneTimeProgress
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Staff", action = "Login", id = UrlParameter.Optional }
+                defaults: new { controller = "OTP", action = "Login", id = UrlParameter.Optional }
             );
         }
     }
