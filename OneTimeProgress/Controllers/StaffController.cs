@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using ExcelDataReader;
 using OneTimeProgress.BussinessEntity;
 using OneTimeProgress.BussinessLayer;
+using OneTimeProgress.DataAccessLayer;
 
 namespace OneTimeProgress.Controllers
 {
@@ -16,8 +17,10 @@ namespace OneTimeProgress.Controllers
         // GET: Staff
 
         Bussines bussines = new Bussines();
+        PostgressDataAccess PostgressDataAccess = new PostgressDataAccess();
         public ActionResult Index()
         {
+           // PostgressDataAccess.Test();
             return View();
         }
         public ActionResult Login()
