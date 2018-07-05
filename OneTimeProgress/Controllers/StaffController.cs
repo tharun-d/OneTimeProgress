@@ -140,6 +140,48 @@ namespace OneTimeProgress.Controllers
                 return RedirectToAction("TaskDetailsTest");
             }
         }
+        public ActionResult TaskDetailsModified()
+        {
+            string staffName = Session["StaffName"].ToString();
+            if (staffName == "RAMST2")
+            {
+                Session["flightNumber"] = "343";
+            }
+            else
+                Session["flightNumber"] = "121";
+            string flightNumber = Session["flightNumber"].ToString();
+            string staffDepartment = Session["StaffDepartment"].ToString();
+            ViewBag.StaffName = staffName;
+            ViewBag.staffDepartment = staffDepartment;
+            FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
+            ViewBag.FlightNumber = flightDetails.FlightNumber;
+            ViewBag.Bay = flightDetails.Bay;
+            ViewBag.CurrentStation = flightDetails.CurrentStation;
+            ViewBag.Departure = flightDetails.Departure;
+            List<TaskLists> taskLists = bussines.GetTasksForParticularFlight(flightNumber, staffName, staffDepartment);
+            ViewBag.TaskLists = taskLists;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult TaskDetailsModified(string Start, string Complete)
+        {
+            DateTime ActualStartTime;
+            double timeDifference;
+            string flightNumber = Session["flightNumber"].ToString();
+            if (string.IsNullOrEmpty(Start))
+            {
+                ActualStartTime = bussines.GettingActualStartTime(flightNumber, Complete);
+                timeDifference = (DateTime.Now.Subtract(ActualStartTime)).TotalMinutes;
+                bussines.UpdateTaskEndStatus(flightNumber, Complete, "Completed", DateTime.Now, timeDifference);
+                return RedirectToAction("TaskDetailsModified");
+            }
+            else
+            {
+                bussines.UpdateTaskStartStatus(flightNumber, Start, "In Progress", DateTime.Now);
+                return RedirectToAction("TaskDetailsModified");
+            }
+        }
+
         //public string InsertTasksandDepartMents()
         //{
         //    DateTime flightdeparture = (DateTime.Now.AddHours(2));
@@ -159,7 +201,7 @@ namespace OneTimeProgress.Controllers
         //        con.Open();
         //        while (reader.Read())
         //        {
-                    
+
         //            SqlCommand cmd = new SqlCommand("InsertIntoTaskList @flightNumber,@taskDetail,@duration,@startTime,@endTime,@statusOfTask,@actualStartTime,@actualEndTime,@timeDifference,@department,@staffName", con);
         //            cmd.Parameters.AddWithValue("@flightNumber", reader.GetDouble(0));
         //            cmd.Parameters.AddWithValue("@taskDetail", reader.GetString(1));
@@ -247,7 +289,7 @@ namespace OneTimeProgress.Controllers
         //        }
         //        con.Close();
         //    }
-            
+
         //    return "Inserted into Task List and Department Table";
         //}
         public string FinalInsert()
