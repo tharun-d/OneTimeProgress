@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "UploadData";
+}
+<script>
+         function validation() {
+             var file1 = document.getElementById("one").value;
+      
+             if (file1 == "") {
+                 document.getElementById("val").innerText = "No File chosen";
+                 document.getElementById("val").style.visibility = "visible";
+                 return false;
+
+             }
+
+             return true;
+         }
+</script>
+@using (Html.BeginForm("UploadData", "OTP", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return validation()" }))
+{
+
+    <div>
+
+
+        <h2>Please select the Excel File</h2>
+
+        @Html.TextBox("ExcelFile", "", new { id = "one", type = "file" }) <br />
+
+
+        
+        <input type="submit" value="Upload" />
+
+        <label id="val" style="visibility:hidden;color:red;"></label>
+
+        @if (IsPost)
+        {
+            @ViewBag.Message
+        }
+
+    </div>
+
+
+}
+

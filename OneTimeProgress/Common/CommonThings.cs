@@ -38,6 +38,7 @@ namespace OneTimeProgress.Common
         public readonly string gettingEndTime = "GettingEndTime @flightNumber,@id";
         public readonly string gettingActualStartTime = "GettingActualStartTime @flightNumber,@id";
         public readonly string gettingAllDepartmentsStatus = "GettingAllDepartmentsStatus @flightNumber";
+        public readonly string deleteData = "DeleteData";
         #endregion
     }
 }

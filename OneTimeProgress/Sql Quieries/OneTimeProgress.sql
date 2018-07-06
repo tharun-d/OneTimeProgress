@@ -278,3 +278,10 @@ select * from LoginDetails
 delete from LoginDetails
 select * from Departments
 delete from Departments
+
+create procedure DeleteData as
+begin
+delete from AllFlightDetails
+delete from tasklist
+delete from LoginDetails
+end

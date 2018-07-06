@@ -430,5 +430,18 @@ namespace OneTimeProgress.DataAccessLayer
             }
             return Math.Round(percentage);
         }
+        public string DeleteData()
+        {
+            SqlCommand sda;
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.deleteData, con);
+            sda.ExecuteNonQuery();
+            con.Close();
+            return "Deleted every table data";
+        }
     }
 }

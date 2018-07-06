@@ -228,10 +228,12 @@
     <Content Include="Views\Manager\FlightsPage.cshtml" />
     <Content Include="Views\Staff\TaskDetailsModified.cshtml" />
     <Content Include="Views\OTP\Login.cshtml" />
+    <Content Include="Views\OTP\UploadData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="UploadFiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

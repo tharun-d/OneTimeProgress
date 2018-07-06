@@ -46,6 +46,41 @@ namespace OneTimeProgress.Controllers
             }
 
         }
+        public ActionResult UploadData()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult UploadData(HttpPostedFileBase ExcelFile)
+        {
+            bool ErrorOccured = false;
+            string path = null;
+            try
+            {
+                if (ExcelFile.ContentLength > 0)
+                {
+                    string _FileName = Path.GetFileName(ExcelFile.FileName);
+                    path = Path.Combine(Server.MapPath("~/UploadFiles/"), _FileName);
+                    ExcelFile.SaveAs(path);
+                }
+                ViewBag.Message = "File uploaded successfully";
+            }
+            catch (Exception ex)
+            {
+                ErrorOccured = true;
+                ViewBag.Message = ex.Message;
+                return View();
+            }
+            finally
+            {
+                if (ErrorOccured == false && path != null)
+                {
+                    DeleteData();
+                    InsertData(path);
+                }
+            }
+            return View();
+        }
         //public string FinalInsert()
         //{
         //    DateTime flightdeparture = (DateTime.Now.AddHours(2));
@@ -183,9 +218,10 @@ namespace OneTimeProgress.Controllers
         //    }
         //    return "Inserted";
         //}
-        public string Insert()
+        public string InsertData(string path)
         {
-            string _path = @"C:\Users\hpadmin\Desktop\Standard\Test.xlsx";
+
+            string _path = path;
             FileStream stream = new FileStream(_path, FileMode.Open, FileAccess.Read);
             SqlConnection con = new SqlConnection("Server=HIB30BWAX2; Initial Catalog = OneTimeProgress; User ID = sa; Password = Passw0rd@12;");
             var reader = ExcelReaderFactory.CreateReader(stream);
@@ -361,6 +397,10 @@ namespace OneTimeProgress.Controllers
                 con.Close();
             }
             return "Inserted";
+        }
+        public string DeleteData()
+        {
+            return bussines.DeleteData();
         }
     }
 }
