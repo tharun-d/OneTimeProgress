@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using OneTimeProgress.BussinessLayer;
+using OneTimeProgress.Common;
 
 namespace OneTimeProgress.Controllers
 {
@@ -223,7 +224,7 @@ namespace OneTimeProgress.Controllers
 
             string _path = path;
             FileStream stream = new FileStream(_path, FileMode.Open, FileAccess.Read);
-            SqlConnection con = new SqlConnection("Server=HIB30BWAX2; Initial Catalog = OneTimeProgress; User ID = sa; Password = Passw0rd@12;");
+            SqlConnection con = new SqlConnection(CommonThings.GetConnectionString());
             var reader = ExcelReaderFactory.CreateReader(stream);
             DateTime For101, For121, For343, For360, For144, For511, taskStartTime, departureTime, tempo;
             For101 = DateTime.Now;

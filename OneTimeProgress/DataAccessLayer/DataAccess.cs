@@ -222,6 +222,10 @@ namespace OneTimeProgress.DataAccessLayer
                     {
                         details.Colour = "Red";
                     }
+                    if (DateTime.Now > Convert.ToDateTime(dr[4]))
+                    {
+                        details.Colour = "Red";
+                    }
                 }
                 if (details.TimeDifference < 0)
                 {
@@ -230,6 +234,10 @@ namespace OneTimeProgress.DataAccessLayer
                 if (details.Status == "Completed")
                 {
                     if (details.TimeDifference - details.Duration > 0)
+                    {
+                        details.Colour = "Red";
+                    }
+                    if (Convert.ToDateTime(dr[7])> Convert.ToDateTime(dr[4]))
                     {
                         details.Colour = "Red";
                     }
@@ -411,12 +419,18 @@ namespace OneTimeProgress.DataAccessLayer
                     {
                         departments.Colour = "Red";
                     }
+                    else if(Convert.ToDateTime(dr[6])> Convert.ToDateTime(dr[3]))
+                        departments.Colour = "Red";
                     else
                         departments.Colour = "Green";
                 }
                 if (departments.StatusofDepatment == "In Progress")
                 {
                     departments.Colour = "Yellow";//warning bar
+                    if (DateTime.Now> Convert.ToDateTime(dr[3]))
+                    {
+                        departments.Colour = "Red";
+                    }
                     int totalCount = CountingTasksForDepartment(flightNumber,departments.DepartmentName);
                     int completedCount = GettingAllCompletedTasksForDepartment(flightNumber,departments.DepartmentName);
                     departments.ProgressPercentage = ProgressCaluclatorForDepartment(completedCount, totalCount);
@@ -496,7 +510,7 @@ namespace OneTimeProgress.DataAccessLayer
             con.Close();
             return result;
         }
-      
+        
         public bool InProgressTasksForDepartment(string flightNumber, string departmentName)
         {
             int result = 0;
