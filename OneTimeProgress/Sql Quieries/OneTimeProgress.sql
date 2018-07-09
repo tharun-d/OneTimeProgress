@@ -268,7 +268,7 @@ as
 begin
 select departmentName,superVisorName,sheduledStartTime,sheduledEndTime,sheduledDuration,actualStartTime,actualEndTime,statusOfDepartment from Departments
 where flightNumber=@flightNumber
-end
+end  
 ----------------------
 select * from tasklist
 delete from tasklist
