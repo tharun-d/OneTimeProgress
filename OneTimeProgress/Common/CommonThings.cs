@@ -40,6 +40,7 @@ namespace OneTimeProgress.Common
         public readonly string gettingAllDepartmentsStatus = "GettingAllDepartmentsStatus @flightNumber";
         public readonly string deleteData = "DeleteData";
         public readonly string countingTasksForDepartment = "CountingTasksForDepartment @flightNumber,@departmentName";
+        public readonly string gettingAllCompletedTasksForDepartment = "GettingAllCompletedTasksForDepartment @flightNumber,@departmentName";
         public readonly string inProgressTasksForDepartment = "InProgressTasksForDepartment @flightNumber,@departmentName";
         public readonly string inProgressOrYetToStartTasksForDepartment = "InProgressOrYetToStartTasksForDepartment @flightNumber,@departmentName";
         public readonly string updateStatusInDepartments = "UpdateStatusInDepartments @flightNumber,@departmentName,@actualStartTime";

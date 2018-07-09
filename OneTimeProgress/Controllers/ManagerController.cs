@@ -32,12 +32,12 @@ namespace OneTimeProgress.Controllers
         public ActionResult DepartmentStatus()
         {
             ViewBag.ManagerName = Session["ManagerName"].ToString();
-            string flightNumber = Session["flightNumber"].ToString();
+            string flightNumber = Session["SflightNumber"].ToString();
             FlightDetails flightDetails = bussines.GetDetailsForOneFlight(flightNumber);
             ViewBag.FlightNumber = flightDetails.FlightNumber;
             ViewBag.Bay = flightDetails.Bay;
             ViewBag.CurrentStation = flightDetails.CurrentStation;
-            ViewBag.Departments = bussines.GetAllDepartmentsStatuss(flightNumber);
+            ViewBag.Departments = bussines.GetAllDepartmentsStatus(flightNumber);
             return View();
         }
     }

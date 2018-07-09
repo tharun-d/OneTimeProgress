@@ -106,10 +106,7 @@ namespace OneTimeProgress.BussinessLayer
         {
             return dataAccess.GetAllDepartmentsStatus(flightNumber);
         }
-        public List<Departments> GetAllDepartmentsStatuss(string flightNumber)
-        {
-            return dataAccess.GetAllDepartmentsStatuss(flightNumber);
-        }
+  
         public string DeleteData()
         {
             return dataAccess.DeleteData();

@@ -63,8 +63,8 @@ namespace OneTimeProgress.DataAccessLayer
                     FlightModel = Convert.ToString(dr[1]),
                     CurrentStation = Convert.ToString(dr[2]),
                     Bay = Convert.ToInt32(dr[3]),
-                    TaskStartTime = Convert.ToDateTime(dr[4]).ToString("hh:mm"),
-                    Departure = Convert.ToDateTime(dr[5]).ToString("hh:mm")
+                    TaskStartTime = (Convert.ToDateTime(dr[4])).ToString("HH:mm"),
+                    Departure = (Convert.ToDateTime(dr[5])).ToString("HH:mm")
                 };
                 if (flightDetail.FlightNumber == "101")
                 {
@@ -258,8 +258,8 @@ namespace OneTimeProgress.DataAccessLayer
                 flightDetails.FlightModel = Convert.ToString(dr[1]);
                 flightDetails.CurrentStation = Convert.ToString(dr[2]);
                 flightDetails.Bay = Convert.ToInt32(dr[3]);
-                flightDetails.TaskStartTime = Convert.ToDateTime(dr[4]).ToString("hh:mm");
-                flightDetails.Departure = Convert.ToDateTime(dr[5]).ToString("hh:mm");
+                flightDetails.TaskStartTime = Convert.ToDateTime(dr[4]).ToString("HH:mm");
+                flightDetails.Departure = Convert.ToDateTime(dr[5]).ToString("HH:mm");
             }
             con.Close();
             return flightDetails;
@@ -407,13 +407,19 @@ namespace OneTimeProgress.DataAccessLayer
                 if(departments.StatusofDepatment=="Completed")
                 {
                     departments.ActualDuration = (Convert.ToDateTime(dr[5]) - Convert.ToDateTime(dr[4])).TotalMinutes;
+                    if (departments.ActualDuration > departments.SheduledDuration)
+                    {
+                        departments.Colour = "Red";
+                    }
+                    else
+                        departments.Colour = "Green";
                 }
                 if (departments.StatusofDepatment == "In Progress")
                 {
-                    double totalDuration = Math.Round((Convert.ToDateTime(dr[3]) - Convert.ToDateTime(dr[2])).TotalMinutes);
-                    double currrentDuration = Math.Round(DateTime.Now.Subtract((Convert.ToDateTime(dr[4]))).TotalMinutes);
-                    departments.Colour = "yellow";//warning bar
-                    departments.ProgressPercentage = ProgressCaluclatorForDepartment(currrentDuration, totalDuration);
+                    departments.Colour = "Yellow";//warning bar
+                    int totalCount = CountingTasksForDepartment(flightNumber,departments.DepartmentName);
+                    int completedCount = GettingAllCompletedTasksForDepartment(flightNumber,departments.DepartmentName);
+                    departments.ProgressPercentage = ProgressCaluclatorForDepartment(completedCount, totalCount);
                 }
                 listOfDepartments.Add(departments);
             }
@@ -467,47 +473,30 @@ namespace OneTimeProgress.DataAccessLayer
             con.Close();
             return result;
         }
-        public List<Departments> GetAllDepartmentsStatuss(string flightNumber)
+        public int GettingAllCompletedTasksForDepartment(string flightNumber, string departmentName)
         {
-            List<Departments> listOfDepartments = new List<Departments>();
+            int result = 0;
             SqlCommand sda;
             SqlConnection con = new SqlConnection(GetConnectionString());
             if (con.State != ConnectionState.Open)
             {
                 con.Open();
             }
-            sda = new SqlCommand(commonThings.gettingAllDepartmentsStatus, con);
+            sda = new SqlCommand(commonThings.gettingAllCompletedTasksForDepartment, con);
             SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
             sda.Parameters.Add(p1);
+            SqlParameter p2 = new SqlParameter("@departmentName", departmentName);
+            sda.Parameters.Add(p2);
             SqlDataReader dr = sda.ExecuteReader();
 
             while (dr.Read())
             {
-                Departments departments = new Departments()
-                {
-                    DepartmentName = Convert.ToString(dr[0]),
-                    SupervisorName = Convert.ToString(dr[1]),
-                    SheduledStartTime = Convert.ToDateTime(dr[2]).ToString("HH:mm"),
-                    SheduledEndTime = Convert.ToDateTime(dr[3]).ToString("HH:mm"),
-                    SheduledDuration = Convert.ToInt16(dr[4]),
-                    ActualStartTime = Convert.ToDateTime(dr[5]).ToString("HH:mm"),
-                    ActualEndTime = Convert.ToDateTime(dr[6]).ToString("HH:mm"),
-                    StatusofDepatment = Convert.ToString(dr[7])
-                };
-                if (departments.StatusofDepatment == "Completed")
-                {
-                    departments.ActualDuration = (Convert.ToDateTime(dr[5]) - Convert.ToDateTime(dr[4])).TotalMinutes;
-                }
-                if (departments.StatusofDepatment == "In Progress")
-                {
-                    departments.Colour = "yellow";//warning bar
-                   // departments.ProgressPercentage = ProgressCaluclatorForDepartment(currrentDuration, totalDuration);
-                }
-                listOfDepartments.Add(departments);
+                result = Convert.ToInt32(dr[0]);
             }
             con.Close();
-            return listOfDepartments;
+            return result;
         }
+      
         public bool InProgressTasksForDepartment(string flightNumber, string departmentName)
         {
             int result = 0;

@@ -405,13 +405,22 @@ namespace OneTimeProgress.Controllers
                 while (reader.Read())
                 {
                     SqlCommand cmd = new SqlCommand("InsertIntoDepartments @flightNumber,@departmentName,@superVisorName,@sheduledStartTime,@sheduledEndTime,@sheduledDuration,@actualStartTime,@actualEndTime,@statusOfDepartment", con);
-                    string a = reader.GetString(1);
-                    double b = reader.GetDouble(0);
+     
                     cmd.Parameters.AddWithValue("@flightNumber", reader.GetDouble(0));
                     cmd.Parameters.AddWithValue("@departmentName", reader.GetString(1));
-                    cmd.Parameters.AddWithValue("@superVisorName", reader.GetString(2)); 
-                    cmd.Parameters.AddWithValue("@sheduledStartTime", reader.GetDateTime(3).ToString("hh:mm"));
-                    cmd.Parameters.AddWithValue("@sheduledEndTime", reader.GetDateTime(4).ToString("hh:mm"));
+                    cmd.Parameters.AddWithValue("@superVisorName", reader.GetString(2));
+                    if (reader.GetDouble(0)==121)
+                    {
+                        cmd.Parameters.AddWithValue("@sheduledStartTime", For121.AddMinutes(-(reader.GetDouble(9))));
+                        cmd.Parameters.AddWithValue("@sheduledEndTime", For121.AddMinutes(-(reader.GetDouble(9)) + reader.GetDouble(5)));
+                    }
+                    if (reader.GetDouble(0) == 343)
+                    {
+                        cmd.Parameters.AddWithValue("@sheduledStartTime", For343.AddMinutes(-(reader.GetDouble(9))));
+                        cmd.Parameters.AddWithValue("@sheduledEndTime", For343.AddMinutes(-(reader.GetDouble(9)) + reader.GetDouble(5)));
+                    }
+
+
                     cmd.Parameters.AddWithValue("@sheduledDuration", reader.GetDouble(5));
                     cmd.Parameters.AddWithValue("@actualStartTime", reader.GetDateTime(6).ToString("hh:mm"));
                     cmd.Parameters.AddWithValue("@actualEndTime", reader.GetDateTime(7).ToString("hh:mm"));
