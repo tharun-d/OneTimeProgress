@@ -420,6 +420,7 @@ namespace OneTimeProgress.DataAccessLayer
             con.Close();
             return listOfDepartments;
         }
+       
         public double ProgressCaluclatorForDepartment(double currentDuration,double totalDuration)
         {
             double percentage;
@@ -442,6 +443,160 @@ namespace OneTimeProgress.DataAccessLayer
             sda.ExecuteNonQuery();
             con.Close();
             return "Deleted every table data";
+        }
+        public int CountingTasksForDepartment(string flightNumber,string departmentName)
+        {
+            int result =0;
+            SqlCommand sda;
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.countingTasksForDepartment, con);
+            SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
+            sda.Parameters.Add(p1);
+            SqlParameter p2 = new SqlParameter("@departmentName", departmentName);
+            sda.Parameters.Add(p2);
+            SqlDataReader dr = sda.ExecuteReader();
+
+            while (dr.Read())
+            {
+                result = Convert.ToInt32(dr[0]);
+            }
+            con.Close();
+            return result;
+        }
+        public List<Departments> GetAllDepartmentsStatuss(string flightNumber)
+        {
+            List<Departments> listOfDepartments = new List<Departments>();
+            SqlCommand sda;
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.gettingAllDepartmentsStatus, con);
+            SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
+            sda.Parameters.Add(p1);
+            SqlDataReader dr = sda.ExecuteReader();
+
+            while (dr.Read())
+            {
+                Departments departments = new Departments()
+                {
+                    DepartmentName = Convert.ToString(dr[0]),
+                    SupervisorName = Convert.ToString(dr[1]),
+                    SheduledStartTime = Convert.ToDateTime(dr[2]).ToString("HH:mm"),
+                    SheduledEndTime = Convert.ToDateTime(dr[3]).ToString("HH:mm"),
+                    SheduledDuration = Convert.ToInt16(dr[4]),
+                    ActualStartTime = Convert.ToDateTime(dr[5]).ToString("HH:mm"),
+                    ActualEndTime = Convert.ToDateTime(dr[6]).ToString("HH:mm"),
+                    StatusofDepatment = Convert.ToString(dr[7])
+                };
+                if (departments.StatusofDepatment == "Completed")
+                {
+                    departments.ActualDuration = (Convert.ToDateTime(dr[5]) - Convert.ToDateTime(dr[4])).TotalMinutes;
+                }
+                if (departments.StatusofDepatment == "In Progress")
+                {
+                    departments.Colour = "yellow";//warning bar
+                   // departments.ProgressPercentage = ProgressCaluclatorForDepartment(currrentDuration, totalDuration);
+                }
+                listOfDepartments.Add(departments);
+            }
+            con.Close();
+            return listOfDepartments;
+        }
+        public bool InProgressTasksForDepartment(string flightNumber, string departmentName)
+        {
+            int result = 0;
+            SqlCommand sda;
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.inProgressTasksForDepartment, con);
+            SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
+            sda.Parameters.Add(p1);
+            SqlParameter p2 = new SqlParameter("@departmentName", departmentName);
+            sda.Parameters.Add(p2);
+            SqlDataReader dr = sda.ExecuteReader();
+
+            while (dr.Read())
+            {   
+                result = Convert.ToInt32(dr[0]);
+            }
+            con.Close();
+            if (result==0)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+        public bool InProgressOrYetToStartTasksForDepartment(string flightNumber, string departmentName)
+        {
+            int result = 0;
+            SqlCommand sda;
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.inProgressOrYetToStartTasksForDepartment, con);
+            SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
+            sda.Parameters.Add(p1);
+            SqlParameter p2 = new SqlParameter("@departmentName", departmentName);
+            sda.Parameters.Add(p2);
+            SqlDataReader dr = sda.ExecuteReader();
+
+            while (dr.Read())
+            {
+                result = Convert.ToInt32(dr[0]);
+            }
+            con.Close();
+            if (result==0)
+                return true;         
+            else 
+                return false;
+        }
+        public void UpdateStatusInDepartments(string flightNumber, string departmentName, DateTime time)
+        {
+            SqlCommand sda;
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.updateStatusInDepartments, con);
+            SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
+            sda.Parameters.Add(p1);
+            SqlParameter p2 = new SqlParameter("@departmentName", departmentName);
+            sda.Parameters.Add(p2);
+            SqlParameter p3 = new SqlParameter("@actualStartTime", time);
+            sda.Parameters.Add(p3);
+            sda.ExecuteNonQuery();
+            con.Close();
+        }
+        public void UpdateStatusInDepartmentsCompleted(string flightNumber, string departmentName,DateTime time)
+        {
+            SqlCommand sda;
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.updateStatusInDepartmentsCompleted, con);
+            SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
+            sda.Parameters.Add(p1);
+            SqlParameter p2 = new SqlParameter("@departmentName", departmentName);
+            sda.Parameters.Add(p2);
+            SqlParameter p3 = new SqlParameter("@actualEndTime", time);
+            sda.Parameters.Add(p3);
+            sda.ExecuteNonQuery();
+            con.Close();
         }
     }
 }

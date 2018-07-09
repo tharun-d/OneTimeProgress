@@ -37,7 +37,7 @@ namespace OneTimeProgress.Controllers
             ViewBag.FlightNumber = flightDetails.FlightNumber;
             ViewBag.Bay = flightDetails.Bay;
             ViewBag.CurrentStation = flightDetails.CurrentStation;
-            ViewBag.Departments = bussines.GetAllDepartmentsStatus(flightNumber);
+            ViewBag.Departments = bussines.GetAllDepartmentsStatuss(flightNumber);
             return View();
         }
     }

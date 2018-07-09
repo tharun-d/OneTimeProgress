@@ -120,15 +120,23 @@ namespace OneTimeProgress.Controllers
             DateTime ActualStartTime;
             double timeDifference;
             string flightNumber = Session["flightNumber"].ToString();
+            string staffDepartment = Session["StaffDepartment"].ToString();
             if (string.IsNullOrEmpty(Start))
             {
+                
                 ActualStartTime = bussines.GettingActualStartTime(flightNumber, Complete);
                 timeDifference = (DateTime.Now.Subtract(ActualStartTime)).TotalMinutes;
                 bussines.UpdateTaskEndStatus(flightNumber, Complete, "Completed", DateTime.Now, timeDifference);
+                if (bussines.InProgressOrYetToStartTasksForDepartment(flightNumber, staffDepartment))
+                {
+                    bussines.UpdateStatusInDepartmentsCompleted(flightNumber, staffDepartment,DateTime.Now);
+                }
                 return RedirectToAction("TaskDetailsTest");
             }
             else
             {
+                if(bussines.InProgressTasksForDepartment(flightNumber,staffDepartment))
+                    bussines.UpdateStatusInDepartments(flightNumber, staffDepartment,DateTime.Now);
                 bussines.UpdateTaskStartStatus(flightNumber, Start, "In Progress", DateTime.Now);
                 return RedirectToAction("TaskDetailsTest");
             }

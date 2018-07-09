@@ -278,10 +278,40 @@ select * from LoginDetails
 delete from LoginDetails
 select * from Departments
 delete from Departments
-
-create procedure DeleteData as
+-------------------------------------
+alter procedure DeleteData as
 begin
 delete from AllFlightDetails
 delete from tasklist
 delete from LoginDetails
+delete from Departments
+end
+
+create procedure CountingTasksForDepartment(@flightNumber varchar(max),@departmentName varchar(max))as
+begin
+select count(*) from tasklist
+where flightNumber=@flightNumber and department=@departmentName
+end
+
+alter procedure InProgressTasksForDepartment(@flightNumber varchar(max),@departmentName varchar(max))as
+begin
+select count(*) from tasklist
+where flightNumber=@flightNumber and department=@departmentName and not statusOfTask='Yet To Start'
+end
+create procedure InProgressOrYetToStartTasksForDepartment(@flightNumber varchar(max),@departmentName varchar(max))as
+begin
+select count(*) from tasklist
+where flightNumber=@flightNumber and department=@departmentName and not statusOfTask='Completed'
+end
+InProgressTasksForDepartment 121,'Ramp'
+alter procedure UpdateStatusInDepartments(@flightNumber varchar(max),@departmentName varchar(max),@actualStartTime datetime)as
+begin
+update Departments
+set statusOfDepartment = 'In Progress',actualStartTime=@actualStartTime where flightNumber=@flightNumber and departmentName=@departmentName
+end
+
+alter procedure UpdateStatusInDepartmentsCompleted(@flightNumber varchar(max),@departmentName varchar(max),@actualEndTime datetime)as
+begin
+update Departments
+set statusOfDepartment = 'Completed',actualEndTime=@actualEndTime where flightNumber=@flightNumber and departmentName=@departmentName
 end

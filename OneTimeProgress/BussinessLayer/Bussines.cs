@@ -70,29 +70,29 @@ namespace OneTimeProgress.BussinessLayer
 
         //    }
         //}
-        public List<TaskLists> GetTasksForParticularFlight(string flightNumber, string staffName,string staffDepartment)
+        public List<TaskLists> GetTasksForParticularFlight(string flightNumber, string staffName, string staffDepartment)
         {
-            return dataAccess.GetTasksForParticularFlight(flightNumber,staffName,staffDepartment);
+            return dataAccess.GetTasksForParticularFlight(flightNumber, staffName, staffDepartment);
         }
-        public List<ALLTaskLists> GetStatusOfAllTasks(string flightNumber,string superVisorDepartment)
+        public List<ALLTaskLists> GetStatusOfAllTasks(string flightNumber, string superVisorDepartment)
         {
-            return dataAccess.GetStatusOfAllTasks(flightNumber,superVisorDepartment);
+            return dataAccess.GetStatusOfAllTasks(flightNumber, superVisorDepartment);
         }
         public FlightDetails GetDetailsForOneFlight(string flightNumber)
         {
             return dataAccess.GetDetailsForOneFlight(flightNumber);
         }
-        public void UpdateTaskStartStatus(string flightNumber,string task,string statusUpdate,DateTime currentTime)
+        public void UpdateTaskStartStatus(string flightNumber, string task, string statusUpdate, DateTime currentTime)
         {
-           dataAccess.UpdateTaskStartStatus(flightNumber,task, statusUpdate,currentTime);
+            dataAccess.UpdateTaskStartStatus(flightNumber, task, statusUpdate, currentTime);
         }
-        public void UpdateTaskEndStatus(string flightNumber, string task, string statusUpdate, DateTime currentTime,double timeDifference)
+        public void UpdateTaskEndStatus(string flightNumber, string task, string statusUpdate, DateTime currentTime, double timeDifference)
         {
-            dataAccess.UpdateTaskEndStatus(flightNumber, task, statusUpdate, currentTime,timeDifference);
+            dataAccess.UpdateTaskEndStatus(flightNumber, task, statusUpdate, currentTime, timeDifference);
         }
-        public DateTime GettingStartTime(string flightNumber,string id)
+        public DateTime GettingStartTime(string flightNumber, string id)
         {
-           return dataAccess.GettingStartTime(flightNumber, id);
+            return dataAccess.GettingStartTime(flightNumber, id);
         }
         public DateTime GettingEndTime(string flightNumber, string id)
         {
@@ -106,9 +106,29 @@ namespace OneTimeProgress.BussinessLayer
         {
             return dataAccess.GetAllDepartmentsStatus(flightNumber);
         }
+        public List<Departments> GetAllDepartmentsStatuss(string flightNumber)
+        {
+            return dataAccess.GetAllDepartmentsStatuss(flightNumber);
+        }
         public string DeleteData()
         {
             return dataAccess.DeleteData();
+        }
+        public void UpdateStatusInDepartments(string flightNumber, string departmentName, DateTime time)
+        {
+            dataAccess.UpdateStatusInDepartments(flightNumber, departmentName, time);
+        }
+        public void UpdateStatusInDepartmentsCompleted(string flightNumber, string departmentName, DateTime time)
+        {
+            dataAccess.UpdateStatusInDepartmentsCompleted(flightNumber, departmentName, time);
+        }
+        public bool InProgressOrYetToStartTasksForDepartment(string flightNumber, string departmentName)
+        {
+            return dataAccess.InProgressOrYetToStartTasksForDepartment(flightNumber, departmentName);
+        }
+        public bool InProgressTasksForDepartment(string flightNumber, string departmentName)
+        {
+            return dataAccess.InProgressTasksForDepartment(flightNumber, departmentName);
         }
     }
 }

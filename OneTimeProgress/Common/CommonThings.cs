@@ -39,6 +39,11 @@ namespace OneTimeProgress.Common
         public readonly string gettingActualStartTime = "GettingActualStartTime @flightNumber,@id";
         public readonly string gettingAllDepartmentsStatus = "GettingAllDepartmentsStatus @flightNumber";
         public readonly string deleteData = "DeleteData";
+        public readonly string countingTasksForDepartment = "CountingTasksForDepartment @flightNumber,@departmentName";
+        public readonly string inProgressTasksForDepartment = "InProgressTasksForDepartment @flightNumber,@departmentName";
+        public readonly string inProgressOrYetToStartTasksForDepartment = "InProgressOrYetToStartTasksForDepartment @flightNumber,@departmentName";
+        public readonly string updateStatusInDepartments = "UpdateStatusInDepartments @flightNumber,@departmentName,@actualStartTime";
+        public readonly string updateStatusInDepartmentsCompleted = "UpdateStatusInDepartmentsCompleted @flightNumber,@departmentName,@actualEndTime";
         #endregion
     }
 }
