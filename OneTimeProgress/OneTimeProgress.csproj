@@ -229,6 +229,8 @@
     <Content Include="Views\Staff\TaskDetailsModified.cshtml" />
     <Content Include="Views\OTP\Login.cshtml" />
     <Content Include="Views\OTP\UploadData.cshtml" />
+    <Content Include="Views\SuperVisor\SelectDepartment.cshtml" />
+    <Content Include="Views\SuperVisor\DummyData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

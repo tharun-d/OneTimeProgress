@@ -1,7 +1,8 @@
 ﻿
 @{
-    ViewBag.Title = "ALLTaskDetailsTest";
+    ViewBag.Title = "DummyData";
 }
+
 <script>
     window.setInterval(function () {
         var today = new Date();
@@ -18,7 +19,7 @@
         return i;
     }
 </script>
-<span>Welcome @ViewBag.SuperVisorName</span><br/>
+<span>Welcome @ViewBag.SuperVisorName</span><br />
 <span>Dept - @ViewBag.Department</span><br /><br />
 <form method="post">
     <table class="table table-bordered">
@@ -28,7 +29,7 @@
             </tr>
             <tr>
                 <th>Flight Number : @ViewBag.FlightNumber</th>
-                <th>Equipment Type : @ViewBag.FlightModel</th>
+                <th>Equipment Type : @ViewBag.FlightMode</th>
                 <th>Departure Time : @ViewBag.DepartureTime</th>
                 <th>Dept - @ViewBag.Department</th>
             </tr>
@@ -42,8 +43,8 @@
             {
                 <tr>
                     <td align="center" width="25%" rowspan="2">
-                        <p>@item.Task</p>
-                       <p>@item.StaffName</p>
+                        <p>@item.DepartmentName</p>
+                        <p>RAMST1</p>
                     </td>
                     <td>
                         <div>
@@ -123,6 +124,4 @@
         </tbody>
     </table>
 </form>
-
-
 

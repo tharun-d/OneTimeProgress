@@ -58,6 +58,23 @@ namespace OneTimeProgress.BussinessEntity
         public double ProgressPercentage { get; set; }
         public string StaffName { get; set; }
     }
+    public class DummyTaskLists
+    {
+        public int Id { get; set; }
+        public string DepartmentName { get; set; }
+        public string SuperVisor { get; set; }
+        public int Duration { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; } //starttime + duration
+        public string ActualStartTime { get; set; }
+        public string ActualEndTime { get; set; }
+        public int TimeDifference { get; set; }
+        public double CurrentTimeMinusActualStartTime { get; set; } // caluclated if Status is In Progress
+        public string Status { get; set; }
+        public string Colour { get; set; }// status completed then check the timedifference - duration if it is>1 make it red bar
+        public double ProgressPercentage { get; set; }
+        public string StaffName { get; set; }
+    }
     public class Departments
     {
         public string DepartmentName { get; set; }

@@ -430,6 +430,60 @@ namespace OneTimeProgress.Controllers
                 }
                 con.Close();
             }
+            reader.NextResult();
+            if (reader.Name == "DummyData")
+            {
+                int j;
+                reader.Read();
+                con.Open();
+                while (reader.Read())
+                {
+                    SqlCommand cmd = new SqlCommand("InsertIntoDummyTasks @flightNumber,@departmentName,@superVisor,@duration,@startTime,@endTime,@actualStartTime,@actualEndTime,@statusOfDepartment",con);
+
+                    cmd.Parameters.AddWithValue("@flightNumber", reader.GetDouble(0));
+                    cmd.Parameters.AddWithValue("@departmentName", reader.GetString(1));
+                    cmd.Parameters.AddWithValue("@superVisor", reader.GetString(2));
+                    cmd.Parameters.AddWithValue("@duration", reader.GetDouble(3));
+                    if (reader.GetDouble(0)==101)
+                    {
+                        cmd.Parameters.AddWithValue("@startTime", For101.AddMinutes(-reader.GetDouble(9)));
+                        cmd.Parameters.AddWithValue("@endTime", For101.AddMinutes(-reader.GetDouble(9) + reader.GetDouble(3)));
+                        cmd.Parameters.AddWithValue("@actualStartTime", For101.AddMinutes(-reader.GetDouble(10)));
+                        cmd.Parameters.AddWithValue("@actualEndTime", For101.AddMinutes(-reader.GetDouble(11)));
+                    }
+                    else if (reader.GetDouble(0) == 121)
+                    {
+                        cmd.Parameters.AddWithValue("@startTime", For121.AddMinutes(-reader.GetDouble(9)));
+                        cmd.Parameters.AddWithValue("@endTime", For121.AddMinutes(-reader.GetDouble(9) + reader.GetDouble(3)));
+                        cmd.Parameters.AddWithValue("@actualStartTime", For121.AddMinutes(-reader.GetDouble(10)));
+                        cmd.Parameters.AddWithValue("@actualEndTime", For121.AddMinutes(-reader.GetDouble(11)));
+                    }
+                    else if (reader.GetDouble(0) == 343)
+                    {
+                        cmd.Parameters.AddWithValue("@startTime", For343.AddMinutes(-reader.GetDouble(9)));
+                        cmd.Parameters.AddWithValue("@endTime", For343.AddMinutes(-reader.GetDouble(9) + reader.GetDouble(3)));
+                        cmd.Parameters.AddWithValue("@actualStartTime", For343.AddMinutes(-reader.GetDouble(10)));
+                        cmd.Parameters.AddWithValue("@actualEndTime", For343.AddMinutes(-reader.GetDouble(11)));
+                    }
+                    else if (reader.GetDouble(0) == 360)
+                    {
+                        cmd.Parameters.AddWithValue("@startTime", For360.AddMinutes(-reader.GetDouble(9)));
+                        cmd.Parameters.AddWithValue("@endTime", For360.AddMinutes(-reader.GetDouble(9) + reader.GetDouble(3)));
+                        cmd.Parameters.AddWithValue("@actualStartTime", For360.AddMinutes(-reader.GetDouble(10)));
+                        cmd.Parameters.AddWithValue("@actualEndTime", For360.AddMinutes(-reader.GetDouble(11)));
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@startTime", For144.AddMinutes(-reader.GetDouble(9)));
+                        cmd.Parameters.AddWithValue("@endTime", For144.AddMinutes(-reader.GetDouble(9) + reader.GetDouble(3)));
+                        cmd.Parameters.AddWithValue("@actualStartTime", For144.AddMinutes(-reader.GetDouble(10)));
+                        cmd.Parameters.AddWithValue("@actualEndTime", For144.AddMinutes(-reader.GetDouble(11)));
+                    }
+                    cmd.Parameters.AddWithValue("@statusOfDepartment", reader.GetString(8));
+                    j = cmd.ExecuteNonQuery();
+                }
+                con.Close();
+            }
             return "Inserted";
         }
         public string DeleteData()

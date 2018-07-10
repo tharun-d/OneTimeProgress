@@ -127,5 +127,9 @@ namespace OneTimeProgress.BussinessLayer
         {
             return dataAccess.InProgressTasksForDepartment(flightNumber, departmentName);
         }
+        public List<DummyTaskLists> GetDummyTasks(string flightNumber, string department)
+        {
+            return dataAccess.GetDummyTasks(flightNumber, department);
+        }
     }
 }

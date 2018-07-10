@@ -323,3 +323,58 @@ begin
 update Departments
 set statusOfDepartment = 'Completed',actualEndTime=@actualEndTime where flightNumber=@flightNumber and departmentName=@departmentName
 end
+
+---------7/10/18----------------
+create table DummyTasks
+(
+id int identity(1,1),
+flightNumber varchar(max),
+departmentName varchar(max),
+superVisor varchar(max),
+duration int,
+startTime datetime,
+endTime datetime,
+actualStartTime datetime,
+actualEndTime datetime,
+statusOfDepartment varchar(max)
+)
+
+--------------------------------------
+drop table dummytasks
+---------------------
+create procedure InsertIntoDummyTasks
+(
+@flightNumber varchar(max),
+@departmentName varchar(max),
+@superVisor varchar(max),
+@duration int,
+@startTime datetime,
+@endTime datetime,
+@actualStartTime datetime,
+@actualEndTime datetime,
+@statusOfDepartment varchar(max)
+) as 
+begin
+insert into DummyTasks values
+(
+@flightNumber,
+@departmentName,
+@superVisor,
+@duration,
+@startTime,
+@endTime,
+@actualStartTime,
+@actualEndTime,
+@statusOfDepartment
+)
+end
+-------------------------------------
+drop procedure InsertIntoDummyTasks
+-------------------------------------
+create procedure GetDummyTasks(@flightNumber varchar(max),@department varchar(max))
+as
+begin
+select Id,departmentName,superVisor,duration,startTime,endTime,actualStartTime,actualEndTime,statusOfDepartment from DummyTasks
+where flightNumber=@flightNumber and departmentName=@department
+order by startTime
+end

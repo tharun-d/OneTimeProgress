@@ -247,6 +247,60 @@ namespace OneTimeProgress.DataAccessLayer
             con.Close();
             return taskLists;
         }
+        public List<DummyTaskLists> GetDummyTasks(string flightNumber, string department)
+        {
+            List<DummyTaskLists> taskLists = new List<DummyTaskLists>();
+            SqlCommand sda;
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.getDummyTasks, con);
+            SqlParameter p1 = new SqlParameter("@flightNumber", flightNumber);
+            sda.Parameters.Add(p1);
+            SqlParameter p2 = new SqlParameter("@department", department);
+            sda.Parameters.Add(p2);
+            SqlDataReader dr = sda.ExecuteReader();
+            while (dr.Read())
+            {
+                DummyTaskLists dummyTaskLists = new DummyTaskLists()
+                {
+                    Id = Convert.ToInt32(dr[0]),
+                    DepartmentName = Convert.ToString(dr[1]),
+                    SuperVisor = Convert.ToString(dr[2]),
+                    Duration = Convert.ToInt32(dr[3]),
+                    StartTime = (Convert.ToDateTime(dr[4])).ToString("HH:mm"),
+                    EndTime = (Convert.ToDateTime(dr[5])).ToString("HH:mm"),
+                    ActualStartTime = Convert.ToDateTime(dr[6]).ToString("HH:mm"),
+                    ActualEndTime = Convert.ToDateTime(dr[7]).ToString("HH:mm"),
+                    Status=Convert.ToString(dr[8]),
+                    Colour = ""
+                };
+                if (dummyTaskLists.Status=="Completed")
+                {
+                    if ((Convert.ToDateTime(dr[7]) - Convert.ToDateTime(dr[6])).TotalMinutes > dummyTaskLists.Duration)
+                    {
+                        dummyTaskLists.Colour = "Red";
+                    }
+                    if (Convert.ToDateTime(dr[7])> Convert.ToDateTime(dr[4]))
+                    {
+                        dummyTaskLists.Colour = "Red";
+                    }
+                }
+                if (dummyTaskLists.Status == "In Progress")
+                {
+                    dummyTaskLists.CurrentTimeMinusActualStartTime = Math.Round(DateTime.Now.Subtract(Convert.ToDateTime(dr[4])).TotalMinutes);
+                    dummyTaskLists.ProgressPercentage = ProgressCaluclator(dummyTaskLists.CurrentTimeMinusActualStartTime, dummyTaskLists.Duration);
+                    if (DateTime.Now> Convert.ToDateTime(dr[4]))
+                    {
+                        dummyTaskLists.Colour = "Yellow";
+                    }
+                }
+                taskLists.Add(dummyTaskLists);
+            }
+            return taskLists;
+        }
         public FlightDetails GetDetailsForOneFlight(string flightNumber)
         {
             FlightDetails flightDetails = new FlightDetails();
@@ -601,5 +655,6 @@ namespace OneTimeProgress.DataAccessLayer
             sda.ExecuteNonQuery();
             con.Close();
         }
+       
     }
 }
