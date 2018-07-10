@@ -60,7 +60,7 @@ namespace OneTimeProgress.Controllers
             if(internalDepartment=="Select")
             {
                 ViewBag.Message = "Please select the Department";
-                return RedirectToAction("SelectDepartment");
+                return View();
             }
             else if (internalDepartment == "Ramp")
             {

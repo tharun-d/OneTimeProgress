@@ -277,13 +277,14 @@ namespace OneTimeProgress.DataAccessLayer
                     Status=Convert.ToString(dr[8]),
                     Colour = ""
                 };
+                dummyTaskLists.TimeDifference = Math.Round((Convert.ToDateTime(dr[7]) - Convert.ToDateTime(dr[6])).TotalMinutes);
                 if (dummyTaskLists.Status=="Completed")
                 {
-                    if ((Convert.ToDateTime(dr[7]) - Convert.ToDateTime(dr[6])).TotalMinutes > dummyTaskLists.Duration)
+                    if ((((Convert.ToDateTime(dr[7]) - Convert.ToDateTime(dr[6]))).TotalMinutes) > dummyTaskLists.Duration)
                     {
                         dummyTaskLists.Colour = "Red";
                     }
-                    if (Convert.ToDateTime(dr[7])> Convert.ToDateTime(dr[4]))
+                    if (Convert.ToDateTime(dr[7])> Convert.ToDateTime(dr[5]))
                     {
                         dummyTaskLists.Colour = "Red";
                     }

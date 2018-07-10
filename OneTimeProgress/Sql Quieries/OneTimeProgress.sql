@@ -285,6 +285,7 @@ delete from AllFlightDetails
 delete from tasklist
 delete from LoginDetails
 delete from Departments
+delete from DummyTasks
 end
 --------------------------
 create procedure CountingTasksForDepartment(@flightNumber varchar(max),@departmentName varchar(max))as
@@ -377,4 +378,13 @@ begin
 select Id,departmentName,superVisor,duration,startTime,endTime,actualStartTime,actualEndTime,statusOfDepartment from DummyTasks
 where flightNumber=@flightNumber and departmentName=@department
 order by startTime
+end
+-----------------------------
+alter procedure DeleteData as
+begin
+delete from AllFlightDetails
+delete from tasklist
+delete from LoginDetails
+delete from Departments
+delete from DummyTasks
 end
