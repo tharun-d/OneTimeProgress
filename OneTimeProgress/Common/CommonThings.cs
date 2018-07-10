@@ -46,6 +46,7 @@ namespace OneTimeProgress.Common
         public readonly string updateStatusInDepartments = "UpdateStatusInDepartments @flightNumber,@departmentName,@actualStartTime";
         public readonly string updateStatusInDepartmentsCompleted = "UpdateStatusInDepartmentsCompleted @flightNumber,@departmentName,@actualEndTime";
         public readonly string getDummyTasks = "GetDummyTasks @flightNumber,@department";
+        public readonly string gettingFlightNumber = "GettingFlightNumber @time,@staffName";
         #endregion
     }
 }

@@ -278,6 +278,8 @@ select * from LoginDetails
 delete from LoginDetails
 select * from Departments
 delete from Departments
+select * from DummyTasks
+delete from DummyTasks
 -------------------------------------
 create procedure DeleteData as
 begin
@@ -388,3 +390,12 @@ delete from LoginDetails
 delete from Departments
 delete from DummyTasks
 end
+-----------
+alter procedure GettingFlightNumber(@time datetime,@staffName varchar(max))as
+begin
+select  distinct top 1 a.flightnumber from AllFlightDetails a join taskList t
+on a.flightNumber=t.flightNumber
+where t.staffName=@staffName and a.taskStartTime >@time
+end
+
+

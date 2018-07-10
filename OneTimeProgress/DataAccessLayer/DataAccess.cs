@@ -656,6 +656,28 @@ namespace OneTimeProgress.DataAccessLayer
             sda.ExecuteNonQuery();
             con.Close();
         }
-       
+        public int GettingFlightNumber(string staffName)
+        {
+            int result = 0;
+            SqlCommand sda;
+            SqlConnection con = new SqlConnection(GetConnectionString());
+            if (con.State != ConnectionState.Open)
+            {
+                con.Open();
+            }
+            sda = new SqlCommand(commonThings.gettingFlightNumber, con);
+            SqlParameter p1 = new SqlParameter("@time", DateTime.Now);
+            sda.Parameters.Add(p1);
+            SqlParameter p2 = new SqlParameter("@staffName", staffName);
+            sda.Parameters.Add(p2);
+            SqlDataReader dr = sda.ExecuteReader();
+
+            if (dr.Read())
+            {
+                result = Convert.ToInt32(dr[0]);
+            }
+            con.Close();
+            return result;
+        }  
     }
 }
