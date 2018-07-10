@@ -111,6 +111,7 @@ namespace OneTimeProgress.Controllers
             ViewBag.Bay = flightDetails.Bay;
             ViewBag.CurrentStation = flightDetails.CurrentStation;
             ViewBag.Departure = flightDetails.Departure;
+            ViewBag.flightModel = flightDetails.FlightModel;
             List<TaskLists> taskLists = bussines.GetTasksForParticularFlight(flightNumber,staffName,staffDepartment);
             ViewBag.TaskLists = taskLists;
             return View();

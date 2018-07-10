@@ -395,7 +395,5 @@ alter procedure GettingFlightNumber(@time datetime,@staffName varchar(max))as
 begin
 select  distinct top 1 a.flightnumber from AllFlightDetails a join taskList t
 on a.flightNumber=t.flightNumber
-where t.staffName=@staffName and a.taskStartTime >@time
+where t.staffName=@staffName and (@time>a.taskStartTime and @time<a.Departure)
 end
-
-
